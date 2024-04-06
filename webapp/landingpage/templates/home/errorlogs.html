@@ -1,0 +1,65 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Error Logs {% endblock %}
+
+{% block stylesheets %}
+    <!-- Include CSS stylesheets here -->
+    <style>
+        /* Custom styles for the table container */
+        #errorLogsTableContainer {
+            padding: 15px;
+            width: 70%; /* Set the table width to 70% of the screen */
+            margin: auto; /* Center the table horizontally */
+        }
+
+        /* Custom styles for table cells */
+        th, td {
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="panel-header panel-header-md">
+    <div class="header text-center">
+        <h3 class="title" style="color: white;">Error Logs</h3>
+    </div>
+</div>
+    <div class="content">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="errorLogsTableContainer">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Error Type</th>
+                                        <th>Error Message</th>
+                                        <th>Date of Creation</th>
+                                        <th>Date of Updation</th>
+                                        <th>User Id</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for log in error_logs %}
+                                        <tr>
+                                            <td>{{ log.id }}</td>
+                                            <td>{{ log.error_type }}</td>
+                                            <td>{{ log.message }}</td>
+                                            <td>{{ log.created_at }}</td>
+                                            <td>{{ log.updated_at }}</td>
+                                            <td>{{ log.user_id }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

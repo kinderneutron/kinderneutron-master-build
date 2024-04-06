@@ -3,6 +3,22 @@
      build:
        context: ./
        dockerfile: ./dockerfiles/Dockerfile
+     image: kinderneutron_api_image
+     container_name: kinderneutronapicontainer
+     stdin_open: true #  docker attach container_id
+     tty: true
+     ports:
+      - "8001:8001"
+     volumes:
+      - .:/root/kinderneutron
+      - ./requirements.txt:/kinderneutron/requirements.txt
+     networks:
+      - kinderneutron_network
+
+   web_service-1:
+     build:
+       context: ./
+       dockerfile: ./dockerfiles/webapp/Dockerfile
      image: kinderneutronimage
      container_name: kinderneutron_container
      stdin_open: true #  docker attach container_id
@@ -12,11 +28,10 @@
      volumes:
       - .:/root/kinderneutron
       - ./requirements.txt:/kinderneutron/requirements.txt
-   
+     networks:
+      - kinderneutron_network
+
    psql-db:
-    build:
-       context: ./
-       dockerfile: ./Patches/SQL/Dockerfile
     image: 'postgres:14'
     container_name: psql-db
     environment:
@@ -28,6 +43,12 @@
     volumes:
       - db:/var/lib/postgresql/data
       - ./Patches/SQL/create-db.sql:/docker-entrypoint-initdb.d/create-db.sql
+    networks:
+      - kinderneutron_network
   volumes:
     db:
       driver: local 
+
+  networks:
+    kinderneutron_network:
+      driver: bridge

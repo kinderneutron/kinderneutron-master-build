@@ -1,0 +1,155 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock title %}
+
+{% block stylesheets %}
+<!-- Specific Page CSS goes HERE -->
+<style>
+  .card {
+    height: 100%;
+  }
+
+  .card-body {
+    padding: 15px;
+  }
+
+  /* Custom styles for the first card */
+  .first-card {
+    height: 100%;
+  }
+
+  /* Custom style for the chart area */
+  .chart-area {
+    height: 300px; /* Set the desired height for the chart */
+  }
+
+  /* Custom style for the notifications */
+  .notifications {
+    height: 300px; /* Set the desired height for the notifications */
+    overflow-y: scroll; /* Enable vertical scrolling if needed */
+  }
+
+  .notification-item {
+    margin-bottom: 10px;
+  }
+
+  .notification-item:last-child {
+    margin-bottom: 0;
+  }
+
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="panel-header panel-header-lg">
+  <canvas id="bigDashboardChart">
+</div>
+
+<div class="content">
+  <div class="row">
+    <!-- Card for Live Video -->
+    <div class="col-lg-4">
+      <a href="/camerafeed.html">
+      <div class="card first-card">
+        <div class="card-header">
+          <h5 class="card-category">Live Stream</h5>
+          <h4 class="card-title" style="color:rgb(56, 55, 55);">Camera Feed</h4>
+        </div>
+        <div class="card-body">
+          <video id="liveFeed" autoplay playsinline muted class="img-fluid"></video>
+        </div>
+      </div>
+    </a>
+    </div>
+
+    <!-- Card for Notifications -->
+    <div class="col-lg-4">
+      <a href="/notifications.html">
+      <div class="card" style="color:rgb(56, 55, 55);">
+        <div class="card-header">
+          <h5 class="card-category">Notifications</h5>
+          <h4 class="card-title">Alerts & Messages</h4>
+        </div>
+        <div class="card-body notifications">
+          <!-- Placeholder for dynamic notifications -->
+          <div class="notification-item">Person entered the room.</div>
+          <div class="notification-item">Light switched on.</div>
+          <div class="notification-item">Error: Motion sensor malfunction.</div>
+          <!-- More notifications here -->
+        </div>
+      </div>
+    </a>
+    </div>
+
+    <!-- Card for Dynamic Graphs -->
+    <div class="col-lg-4">
+      <a href="/electricitystatus.html">
+      <div class="card" style="color:rgb(56, 55, 55);">
+        <div class="card-header">
+          <h5 class="card-category">Electricity Status</h5>
+          <h4 class="card-title">Electric Consumption</h4>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <!-- Placeholder for dynamic graph (Electricity Consumption) -->
+            <canvas id="electricityConsumptionChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </a>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script src="/static/assets/js/plugins/chartjs.min.js"></script>
+<script>
+    $(document).ready(function() {
+      // Javascript method's body can be found in assets/js/demos.js
+      demo.initDashboardPageCharts();
+
+    });
+
+  document.addEventListener('DOMContentLoaded', function() {
+
+    var consumptionData = {
+      labels: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ],
+      datasets: [{
+        label: 'Electricity Consumption',
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1,
+        data: [50, 45, 48, 55, 52, 47, 49, 50, 23, 34 ,58, 68] // Sample data for electricity consumption
+      }]
+    };
+
+    var consumptionCtx = document.getElementById('electricityConsumptionChart').getContext('2d');
+    var consumptionChart = new Chart(consumptionCtx, {
+      type: 'bar',
+      data: consumptionData,
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    var video = document.querySelector('#liveFeed');
+
+    if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+          video.srcObject = stream;
+        })
+        .catch(function(error) {
+          console.log("Something went wrong when accessing the camera!");
+        });
+    }
+  });
+</script>
+{% endblock javascripts %}

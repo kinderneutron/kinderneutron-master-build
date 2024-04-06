@@ -1,0 +1,68 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Alerts {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="panel-header">
+      <div class="header text-center">
+        <h2 class="title">Notifications</h2>
+      </div>
+    </div>
+    <div class="content">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Person Status</h4>
+            </div>
+            <div class="card-body">
+              <div class="alert alert-info">
+                <span>Person entered the room.</span>
+              </div>
+              <div class="alert alert-info">
+                <span>Person exited the room.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Light Status</h4>
+            </div>
+            <div class="card-body">
+              <div class="alert alert-info">
+                <span>Light switched on.</span>
+              </div>
+              <div class="alert alert-info">
+                <span>Light switched off.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Error Status</h4>
+            </div>
+            <div class="card-body">
+              <div class="alert alert-danger">
+                <span>Error: Motion sensor malfunction.</span>
+              </div>
+              <div class="alert alert-danger">
+                <span>Error: Connection lost.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
