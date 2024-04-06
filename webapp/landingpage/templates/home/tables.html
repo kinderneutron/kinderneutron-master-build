@@ -1,0 +1,120 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Tables {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="panel-header panel-header-sm">
+    </div>
+    <div class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">User Table</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Date Of Creation</th>
+                                <th>Date of Updation</th>
+                            </tr>
+                            
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.created_at }}</td>
+                                <td>{{ user.updated_at }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Device</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>User Name</th>
+                                <th>Device Name</th>
+                                <th>Login Time</th>
+                                <th>Date of Updation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for device in devices %}
+                            <tr>
+                                <td>{{ device.id }}</td>
+                                <td>{{ device.username }}</td>
+                                <td>{{ device.device_name }}</td>
+                                <td>{{ device.login_time }}</td>
+                                <td>{{ device.updated_at }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Detection</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Result</th>
+                                <th>Date of Creation</th>
+                                <th>TImestamp</th>
+                                <th>Date of Updation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detection in detection_data %}
+                            <tr>
+                                <td>{{ detection.id }}</td>
+                                <td>{{ detection.result }}</td>
+                                <td>{{ detection.created_at }}</td>
+                                <td>{{ detection.timestamp }}</td>
+                                <td>{{ detection.updated_at }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
