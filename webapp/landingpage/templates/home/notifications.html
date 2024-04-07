@@ -19,14 +19,36 @@
             <div class="card-header">
               <h4 class="card-title">Person Status</h4>
             </div>
-            <div class="card-body">
-              <div class="alert alert-info">
-                <span>Person entered the room.</span>
-              </div>
-              <div class="alert alert-info">
-                <span>Person exited the room.</span>
-              </div>
+            <div class="card-body" id ='status-container'>
             </div>
+          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function updateData() {
+        $.ajax({
+            url: '{% url "ajax_update_data" %}',  // URL to your AJAX endpoint
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (data.person_detected == 'yes') {
+                    $('#status-container').html('<div class="alert alert-info"><span>Person entered the room.</span></div>');
+                    $('#light-status').html('<div class="alert alert-info"><span>Light Is On</span></div>');
+                } else {
+                    $('#status-container').html('<div class="alert alert-info"><span>Person exited the room.</span></div>');
+                    $('#light-status').html('<div class="alert alert-info"><span>Light Is Off</span></div>');
+                  }
+            },
+            error: function(xhr, status, error) {
+                console.log('Error updating data:', error);
+            }
+        });
+    }
+
+    // Call updateData function initially and every 5 seconds (adjust interval as needed)
+    updateData();  // Update data initially
+    setInterval(updateData, 1000);  // Update data every 5 seconds
+</script>
+
+          
           </div>
         </div>
         <div class="col-md-4">
@@ -34,13 +56,8 @@
             <div class="card-header">
               <h4 class="card-title">Light Status</h4>
             </div>
-            <div class="card-body">
-              <div class="alert alert-info">
-                <span>Light switched on.</span>
-              </div>
-              <div class="alert alert-info">
-                <span>Light switched off.</span>
-              </div>
+            <div class="card-body" id="light-status">
+             
             </div>
           </div>
         </div>
