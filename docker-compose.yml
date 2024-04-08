@@ -4,6 +4,11 @@
        context: ./
        dockerfile: ./dockerfiles/Dockerfile
      image: kinderneutron_api_image
+     devices:
+      - /dev/video0:/dev/video0
+      - /dev/ttyACM0:/dev/ttyACM0
+     environment:
+      - DISPLAY=:0
      container_name: kinderneutronapicontainer
      stdin_open: true #  docker attach container_id
      tty: true
@@ -18,8 +23,11 @@
    web_service-1:
      build:
        context: ./
-       dockerfile: ./dockerfiles/webapp/Dockerfile
+       dockerfile: ./dockerfiles/Dockerfile
      image: kinderneutronimage
+     devices:
+      - /dev/video0:/dev/video0
+      - /dev/ttyACM0:/dev/ttyACM0
      container_name: kinderneutron_container
      stdin_open: true #  docker attach container_id
      tty: true

@@ -1,11 +1,15 @@
 import cv2
 import numpy as np
 import requests
+import os
+import json
+import serial
 
 # Load YOLO
 net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
 layer_names = net.getUnconnectedOutLayersNames()
-
+ser = serial.Serial('/dev/ttyACM0', 9600)
+filepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data.json'))
 # Function to process video frames and perform object detection
 def process_frame(frame):
     height, width, _ = frame.shape
@@ -51,7 +55,7 @@ def process_video_feed(url):
         return
 
     bytes_data = bytes()
-    for chunk in response.iter_content(chunk_size=1024):
+    for chunk in response.iter_content(chunk_size=10):
         bytes_data += chunk
         a = bytes_data.find(b'\xff\xd8')  # Start of frame
         b = bytes_data.find(b'\xff\xd9')  # End of frame
@@ -64,17 +68,30 @@ def process_video_feed(url):
             processed_frame, person_detected = process_frame(frame)
 
             # Display the processed frame
-            cv2.imshow('Human Detection', processed_frame)
+            #cv2.imshow('Human Detection', processed_frame)
 
             if person_detected:
                 print("Person Detected! Acknowledgement: Present")
+                ser.write(b'H')
+                jsonupdate('yes')
             else:
                 print("Person Not Detected! Acknowledgement: Absent")
-
+                ser.write(b'L')
+                jsonupdate('no')
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
+def jsonupdate(val):
+    with open(filepath, 'r+') as file:
+            data = json.load(file)
+            data['person_detected'] = val
+            file.seek(0)
+            json.dump(data, file, indent=4)
+            file.truncate()
+            print("JSON file updated successfully.")
 # Example usage
-video_feed_url = 'http://kinderneutronapicontainer:8002/videostreamapi'  # Replace with your server URL
+
+video_feed_url = 'http://kinderneutronapicontainer:8001/videostreamapi'  # Replace with your server URL
 process_video_feed(video_feed_url)
 cv2.destroyAllWindows()
+ser.close() 

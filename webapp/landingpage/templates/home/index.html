@@ -71,13 +71,37 @@
           <h5 class="card-category">Notifications</h5>
           <h4 class="card-title">Alerts & Messages</h4>
         </div>
-        <div class="card-body notifications">
+        <div class="card-body notifications" id="status-container">
           <!-- Placeholder for dynamic notifications -->
-          <div class="notification-item">Person entered the room.</div>
-          <div class="notification-item">Light switched on.</div>
-          <div class="notification-item">Error: Motion sensor malfunction.</div>
+         
           <!-- More notifications here -->
+          
         </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+          function updateData() {
+              $.ajax({
+                  url: '{% url "ajax_update_data" %}',  // URL to your AJAX endpoint
+                  type: 'GET',
+                  dataType: 'json',
+                  success: function(data) {
+                      if (data.person_detected == 'yes') {
+                          $('#status-container').html('<div class="notification-item" >Person entered the room.</div> <div class="notification-item">Light switched on.</div>');
+                         
+                      } else {
+                        $('#status-container').html('<div class="notification-item" >Person exited the room.</div> <div class="notification-item">Light switched Off.</div>');
+                      }
+                  },
+                  error: function(xhr, status, error) {
+                      console.log('Error updating data:', error);
+                  }
+              });
+          }
+      
+          // Call updateData function initially and every 5 seconds (adjust interval as needed)
+          updateData();  // Update data initially
+          setInterval(updateData, 1000);  // Update data every 5 seconds
+      </script>
       </div>
     </a>
     </div>

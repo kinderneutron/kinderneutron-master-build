@@ -39,14 +39,20 @@
     <script>
         var video = document.getElementById('videoElement');
 
-        // Prompt the user for permission, get the video stream
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function (stream) {
-                video.srcObject = stream;
+        // Fetch the live video stream from the API endpoint
+        fetch('http://kinderneutronapicontainer:8001/videostreamapi')
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob();
+            })
+            .then(function(blob) {
+                video.src = URL.createObjectURL(blob);
                 video.play();
             })
-            .catch(function (error) {
-                console.log("Something went wrong:", error);
+            .catch(function(error) {
+                console.log("Error fetching video stream:", error);
             });
     </script>
 {% endblock javascripts %}
