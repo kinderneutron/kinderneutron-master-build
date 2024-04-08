@@ -31,6 +31,16 @@
      networks:
       - kinderneutron_network
 
+   rabbitmq:
+    image: rabbitmq:management
+    container_name: RabbitMQ-Server
+    ports:
+      - "5672:5672" # AMQP port
+      - "15672:15672" # RabbitMQ Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+
    psql-db:
     image: 'postgres:14'
     container_name: psql-db
@@ -48,6 +58,7 @@
   volumes:
     db:
       driver: local 
+  
 
   networks:
     kinderneutron_network:

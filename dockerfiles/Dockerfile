@@ -25,7 +25,7 @@ RUN apt-get update && \
 
 # Install OpenCV using pip
   RUN pip install opencv-python
-  COPY ../requirements.txt .
+  COPY ./requirements.txt .
   RUN pip install -r requirements.txt
   # Create directories  
   RUN mkdir -p /root/workspace/src
