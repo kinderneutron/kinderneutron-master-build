@@ -1,5 +1,6 @@
 *.js linguist-detectable=false
 *.css linguist-detectable=false
+.ps1 linguist-detectable=false
 *.html linguist-detectable=false
 *.yml linguist-detectable
-.ps1 linguist-detectable=false
+
