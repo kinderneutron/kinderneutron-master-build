@@ -25,11 +25,7 @@ RUN apt-get update && \
 
 # Install OpenCV using pip
   RUN pip install opencv-python
-<<<<<<< HEAD
   COPY ./requirements.txt .
-=======
-  COPY ../requirements.txt /root/kinderneutron
->>>>>>> 632ef3d95211baa7a2d98f0bafae77c1c8cdbba8
   RUN pip install -r requirements.txt
   # Create directories  
   RUN mkdir -p /root/workspace/src
