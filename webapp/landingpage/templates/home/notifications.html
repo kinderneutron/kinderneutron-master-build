@@ -28,8 +28,10 @@
             url: '{% url "ajax_update_data" %}',  // URL to your AJAX endpoint
             type: 'GET',
             dataType: 'json',
+            
             success: function(data) {
                 if (data.person_detected == 'yes') {
+                    
                     $('#status-container').html('<div class="alert alert-info"><span>Person entered the room.</span></div>');
                     $('#light-status').html('<div class="alert alert-info"><span>Light Is On</span></div>');
                 } else {

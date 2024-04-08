@@ -38,21 +38,29 @@
     <!-- JavaScript code for live camera feed -->
     <script>
         var video = document.getElementById('videoElement');
-
         // Fetch the live video stream from the API endpoint
-        fetch('http://kinderneutronapicontainer:8001/videostreamapi')
-            .then(function(response) {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.blob();
-            })
-            .then(function(blob) {
-                video.src = URL.createObjectURL(blob);
-                video.play();
-            })
-            .catch(function(error) {
-                console.log("Error fetching video stream:", error);
-            });
+        async function fetchLiveVideo(url) {
+           
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      alert('error')
+    }
+    
+
+    const videoBlob = await response.blob();
+    const videoUrl = URL.createObjectURL(videoBlob);
+
+    // Now you can use the videoUrl to display the video or process it further
+    console.log("Video URL:", videoUrl);
+  } catch (error) {
+    console.error("Error fetching video feed:", error.message);
+  }
+}
+
+const videoUrl = "http://kinderneutronapicontainer:8001/videostreamapi";
+fetchLiveVideo(videoUrl);
+
+
     </script>
 {% endblock javascripts %}

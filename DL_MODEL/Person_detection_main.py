@@ -3,12 +3,12 @@ import numpy as np
 import requests
 import os
 import json
-import serial
+#import serial
 
 # Load YOLO
 net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
 layer_names = net.getUnconnectedOutLayersNames()
-ser = serial.Serial('/dev/ttyACM0', 9600)
+#ser = serial.Serial('/dev/ttyACM0', 9600)
 filepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data.json'))
 # Function to process video frames and perform object detection
 def process_frame(frame):
@@ -72,11 +72,11 @@ def process_video_feed(url):
 
             if person_detected:
                 print("Person Detected! Acknowledgement: Present")
-                ser.write(b'H')
+                #ser.write(b'H')
                 jsonupdate('yes')
             else:
                 print("Person Not Detected! Acknowledgement: Absent")
-                ser.write(b'L')
+                #ser.write(b'L')
                 jsonupdate('no')
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
