@@ -1,3 +1,4 @@
-*.html export-ignore
-*.css export-ignore
-*.js export-ignore
+*.js linguist-detectable=false
+*.css linguist-detectable=false
+*.html linguist-detectable=false
+
