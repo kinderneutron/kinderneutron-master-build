@@ -3,4 +3,4 @@
 .ps1 linguist-detectable=false
 *.html linguist-detectable=false
 *.yml linguist-detectable
-
+*.json linguist-detectable
