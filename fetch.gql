@@ -1,4 +1,4 @@
-type ErrorLog {
+ type ErrorLog {
   id: ID!
   user_id: Int!
   error_type: String!
