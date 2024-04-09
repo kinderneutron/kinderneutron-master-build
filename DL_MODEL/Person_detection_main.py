@@ -4,8 +4,9 @@ import requests
 import os
 import json
 #import serial
-
+from DatabaseUpdate import Database_Update as kinderneutron
 # Load YOLO
+kn = kinderneutron()
 net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
 layer_names = net.getUnconnectedOutLayersNames()
 #ser = serial.Serial('/dev/ttyACM0', 9600)
@@ -73,11 +74,17 @@ def process_video_feed(url):
             if person_detected:
                 print("Person Detected! Acknowledgement: Present")
                 #ser.write(b'H')
-                jsonupdate('yes')
+                if checkjson() == 'no':
+                    jsonupdate('yes')
+                    kn.dbupdate()
+                
             else:
                 print("Person Not Detected! Acknowledgement: Absent")
                 #ser.write(b'L')
-                jsonupdate('no')
+                if checkjson() == 'yes':
+                    jsonupdate('no')
+                    kn.dbupdate()
+                
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
@@ -89,6 +96,14 @@ def jsonupdate(val):
             json.dump(data, file, indent=4)
             file.truncate()
             print("JSON file updated successfully.")
+
+def checkjson():
+    with open(filepath, 'r+') as file:
+            data = json.load(file)
+            return data['person_detected']
+           
+
+
 # Example usage
 
 video_feed_url = 'http://kinderneutronapicontainer:8001/videostreamapi'  # Replace with your server URL

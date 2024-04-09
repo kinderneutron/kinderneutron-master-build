@@ -8,6 +8,7 @@ error_id = 1
 @api_view(['GET','POST'])
 def my_data_view(request):
     if request.method =="GET":
+        print(request.method)
         raw_data = get_my_data()
         # Convert raw data to a format suitable for serialization
         data = [
@@ -18,14 +19,16 @@ def my_data_view(request):
         serializer = DetectionSerializer(data, many=True)
         return Response(serializer.data)
     elif request.method == "POST":
-        postdata = request.POST
+        elemid = request.data.get('id')
+        timestamp = request.data.get('timestamp')
+        result = request.data.get('result')
         conn = psycopg2.connect(dbname="kinderneutron_db", user="postgres",  password="123456",  host="psql-db", port="5432")
         with conn.cursor() as cursor:
         # The SQL INSERT query
             query = """INSERT INTO "detection" (id, timestamp, result) VALUES (%s, %s,%s)"""
         
         # Data to insert
-            data = (postdata['id'],postdata['timestamp'], postdata['result'])
+            data = (elemid,timestamp,result)
             print(data)
         # Execute the query
             cursor.execute(query, data)

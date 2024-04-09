@@ -8,7 +8,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm, SignUpForm
 import psycopg2
-
+global device_id 
+device_id = 1
 def login_view(request):
     if request.method =="GET":
         name = request.GET.get('username') if request.GET.get('username') else " "
@@ -20,7 +21,29 @@ def login_view(request):
         if not records:
             return redirect('http://127.0.0.1:8000/login/?show_div=True')
         else:
+            with conn.cursor() as cursor:
+        # The SQL INSERT query
+                query = """INSERT INTO "device" (id, username, device_name) VALUES (%s, %s,%s)"""
+            
+            # Data to insert
+                global device_id
+                data = ("DEV-0"+str(device_id),name,"Web Application")
+                device_id = device_id+1
+                print(data)
+            # Execute the query
+                cursor.execute(query, data)
+            
+            # Commit the transaction
+                try:
+                    conn.commit()
+                    
+                except Exception as e:
+                    query1 = """INSERT INTO "error_log" (id, userid, error_type,message,created_at,updated_at) VALUES (%s, %s,%s,%s)"""
+                    data = ("DBERROR-0"+str(error_id),"N/A","Database Error","Error Due to Invalid Post Request")
+                    cursor.execute(query1, data)
+                    error_id = error_id+1
             return redirect('http://127.0.0.1:8000/landingpage/')
+
 
 
     # if request.method == "GET":

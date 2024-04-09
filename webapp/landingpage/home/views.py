@@ -18,6 +18,7 @@ import requests
 import json
 import os
 detection_id = 1
+error_id = 1
 filepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..', 'data.json'))
 # @login_required(login_url="/login/")
 def index(request):
@@ -78,21 +79,7 @@ def ajax_update_data(request):
         with open(filepath, 'r') as file:
             data = json.load(file)
             person_detected = data.get('person_detected', 'no')  # Get 'person_detected' value from JSON data
-            if person_detected =='yes':
-                a = 1
-                data = {'id':'DET-0'+str(detection_id),'timestamp':datetime.datetime.now(),'result':'Deteted', }
-                requests.post('http://kinderneutronapicontainer:8001/detectionapi/',data=data)
-                detection_id = detection_id+1
-
-            else:
-                data = {'id':'DET-0'+str(detection_id),
-                        'timestamp':datetime.datetime.now(),
-                        'result':'Not Deteted',
-
-                        }
-                requests.post('http://kinderneutronapicontainer:8001/detectionapi/',data=data)
-                detection_id = detection_id+1
 
         return JsonResponse({'person_detected': person_detected})
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return e
