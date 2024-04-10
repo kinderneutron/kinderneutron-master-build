@@ -1,4 +1,6 @@
-FROM python:3.10.2-alpine3.15
+FROM python:3.9-slim
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC0
   # Install required packages
   # For psycopg2 and Git
   RUN apk update && \
