@@ -4,7 +4,17 @@ import datetime
 import os 
 class Database_Update:
     def __init__(self):
-        self.detection_id = 1
+        conn = psycopg2.connect(dbname="kinderneutron_db", user="postgres",  password="123456",  host="psql-db", port="5432")
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM detection")
+        records = cursor.fetchone()  
+        if records == 0:
+            self.detection_id = 1
+        else:
+            cursor.execute("SELECT id FROM detection ORDER BY id DESC LIMIT 1")
+            records = cursor.fetchone()
+            (records,) = records
+            self.detection_id = int(records[len("DET-0"):])+1
         self.error_id = 1
     def dbupdate(self):
         filepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data.json'))

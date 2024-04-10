@@ -28,7 +28,7 @@
      devices:
       - /dev/video0:/dev/video0
       #- /dev/ttyACM0:/dev/ttyACM0
-     container_name: kinderneutron_container
+     container_name: kinderneutroncontainer
      stdin_open: true #  docker attach container_id
      tty: true
      ports:
