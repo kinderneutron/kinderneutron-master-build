@@ -19,7 +19,11 @@ def video_stream():
 # Decorator to compress the stream using gzip
 @gzip.gzip_page
 def video_feed(request):
-    return StreamingHttpResponse(video_stream(), content_type='multipart/x-mixed-replace; boundary=frame')
+    response = StreamingHttpResponse(video_stream(), content_type='multipart/x-mixed-replace; boundary=frame')
+    response['Access-Control-Allow-Origin'] = '*'
+    response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Accept'
+    return response
 
 # Start the camera capture in a separate thread
 def start_camera_capture():
