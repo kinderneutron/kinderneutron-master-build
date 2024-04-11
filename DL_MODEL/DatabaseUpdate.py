@@ -11,7 +11,7 @@ class Database_Update:
         if records == 0:
             self.detection_id = 1
         else:
-            cursor.execute("SELECT id FROM detection ORDER BY id DESC LIMIT 1")
+            cursor.execute("SELECT id FROM detection ORDER BY created_at DESC LIMIT 1")
             records = cursor.fetchone()
             (records,) = records
             self.detection_id = int(records[len("DET-0"):])+1

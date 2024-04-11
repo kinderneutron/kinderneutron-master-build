@@ -3,7 +3,7 @@ import numpy as np
 import requests
 import os
 import json
-#import serial
+import serial
 from DatabaseUpdate import Database_Update as kinderneutron
 # Load YOLO
 kn = kinderneutron()
@@ -73,14 +73,14 @@ def process_video_feed(url):
 
             if person_detected:
                 print("Person Detected! Acknowledgement: Present")
-                #ser.write(b'H')
+               # ser.write(b'H')
                 if checkjson() == 'no':
                     jsonupdate('yes')
                     kn.dbupdate()
                 
             else:
                 print("Person Not Detected! Acknowledgement: Absent")
-                #ser.write(b'L')
+               # ser.write(b'L')
                 if checkjson() == 'yes':
                     jsonupdate('no')
                     kn.dbupdate()
@@ -109,4 +109,4 @@ def checkjson():
 video_feed_url = 'http://kinderneutronapicontainer:8001/videostreamapi'  # Replace with your server URL
 process_video_feed(video_feed_url)
 cv2.destroyAllWindows()
-ser.close() 
+#ser.close() 
