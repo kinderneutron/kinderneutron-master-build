@@ -1,4 +1,5 @@
    # KinderNeutron Capstone API
+[![Project Status: On Production](https://img.shields.io/badge/Project%20Status-On%20Production-brightgreen)](https://github.com/kinderneutron/kinderneutron-master-build)
 
 Welcome to the KinderNeutron Capstone API repository! This API serves as the backend logic for the KinderNeutron project, a culmination of our academic efforts for our FYP
 ## Overview
