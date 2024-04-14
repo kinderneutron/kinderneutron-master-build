@@ -1,8 +1,10 @@
 import cv2
 import numpy as np
 import requests
+import threading
 import os
 import json
+import time
 import serial
 from DatabaseUpdate import Database_Update as kinderneutron
 # Load YOLO
@@ -16,7 +18,9 @@ def process_frame(frame):
     height, width, _ = frame.shape
 
     # Convert the frame to a blob
-    blob = cv2.dnn.blobFromImage(frame, 1/255.0, (416, 416), swapRB=True, crop=False)
+    # Inside process_frame function
+    blob = cv2.dnn.blobFromImage(cv2.resize(frame, (320, 240)), 1/255.0, (416, 416), swapRB=True, crop=False)
+
     net.setInput(blob)
 
     # Forward pass through the network
@@ -87,7 +91,7 @@ def process_video_feed(url):
                 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-
+            time.sleep(0.1)
 def jsonupdate(val):
     with open(filepath, 'r+') as file:
             data = json.load(file)
@@ -107,6 +111,29 @@ def checkjson():
 # Example usage
 
 video_feed_url = 'http://kinderneutronapicontainer:8001/videostreamapi'  # Replace with your server URL
-process_video_feed(video_feed_url)
-cv2.destroyAllWindows()
+# try:
+#     process_video_feed(video_feed_url)
+# except Exception as e:
+#     print("Error:", e)
+# cv2.destroyAllWindows()
+##############################################
 #ser.close() 
+#####################
+thread1 = threading.Thread(target=process_video_feed(video_feed_url))
+thread2 = threading.Thread(target=process_video_feed(video_feed_url))
+thread3 = threading.Thread(target=process_video_feed(video_feed_url))
+thread4 = threading.Thread(target=process_video_feed(video_feed_url))
+
+
+thread1.start()
+thread2.start()
+thread3.start()
+thread4.start()
+
+# Wait for threads to finish
+# Wait for threads to finish
+thread3.join()
+thread4.join()
+# Wait for threads to finish
+thread1.join()
+thread2.join()
