@@ -43,5 +43,6 @@ CREATE TABLE IF NOT EXISTS Detection (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+ALTER TABLE public.user ADD COLUMN auth_token varchar(255);
 END;
 -- End the transaction
