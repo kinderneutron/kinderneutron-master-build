@@ -21,7 +21,7 @@ async def process_frame(frame):
     height, width, _ = frame.shape
 
     # Convert the frame to a blob
-    blob = cv2.dnn.blobFromImage(cv2.resize(frame, (320, 240)), 1/255.0, (416, 416), swapRB=True, crop=False)
+    blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (218, 218), swapRB=True, crop=False)
     net.setInput(blob)
 
     # Forward pass through the network
@@ -60,7 +60,7 @@ async def process_video_feed_async(url):
         return
 
     bytes_data = bytes()
-    for chunk in response.iter_content(chunk_size=50):
+    for chunk in response.iter_content(chunk_size=100):
         bytes_data += chunk
         a = bytes_data.find(b'\xff\xd8')  # Start of frame
         b = bytes_data.find(b'\xff\xd9')  # End of frame
@@ -68,7 +68,6 @@ async def process_video_feed_async(url):
             frame_data = bytes_data[a:b + 2]
             bytes_data = bytes_data[b + 2:]
             frame = cv2.imdecode(np.frombuffer(frame_data, dtype=np.uint8), cv2.IMREAD_COLOR)
-
             # Process the frame asynchronously (perform object detection)
             processed_frame, person_detected = await process_frame(frame)
 
@@ -88,7 +87,6 @@ async def process_video_feed_async(url):
                     jsonupdate('no')
                     kn.dbupdate()
                 # Perform actions based on detection
-            time.sleep(0.02)
 async def main():
     # Create tasks for asynchronous processing
     tasks = [process_video_feed_async(video_feed_url) for _ in range(4)]  # Create 4 tasks
