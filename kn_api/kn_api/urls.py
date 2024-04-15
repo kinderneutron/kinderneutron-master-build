@@ -22,5 +22,6 @@ urlpatterns = [
     path('detectionapi/',include('detectionapi.urls')),
     path('videostreamapi/',include('video_stream.urls')),
     path('device_detection_api/',include('device_detection_api.urls')),
+    path('userapi/',include('userapi.urls')),
     path('admin/', admin.site.urls),
 ]

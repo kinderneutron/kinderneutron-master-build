@@ -8,8 +8,7 @@ from .serializers import ErrorLogSerializer
 # Import JWT Authentication element
 
 # Create your views here.
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])  # Apply JWT Authentication
+@api_view(['GET', 'POST']) # Apply JWT Authentication
 def my_data_view(request):
     if request.method == 'GET':
         raw_data = get_my_data()
