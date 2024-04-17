@@ -55,6 +55,7 @@
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
+<<<<<<< HEAD
   
    neo4j:
     image: neo4j:latest
@@ -76,6 +77,9 @@
       NEO4J_dbms_memory_heap_initial__size: 1G
       NEO4J_dbms_memory_heap_max__size: 2G
       
+=======
+
+>>>>>>> 79df5adaa0a8e5291cd84c81e645f77febd532b8
    psql-db:
     image: 'postgres:14'
     container_name: psql-db
