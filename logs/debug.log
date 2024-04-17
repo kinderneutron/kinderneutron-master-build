@@ -4359,3 +4359,33 @@
 2024-04-17 19:24:49.130+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [neo4j/5e43554e] Checkpoint triggered by "Scheduled checkpoint for every 15 minutes threshold" @ txId: 47 checkpoint completed in 32ms. Checkpoint flushed 37 pages (0% of total available pages), in 33 IOs. Checkpoint performed with IO limit: unlimited, paused in total 0 times( 0 millis).
 2024-04-17 19:24:49.130+0000 INFO  [o.n.k.i.t.l.p.LogPruningImpl] [neo4j/5e43554e] No log version pruned. The strategy used was '2 days 2147483648 size'. 
 2024-04-17 19:54:59.922+0000 WARN  [o.n.k.i.c.VmPauseMonitorComponent] Detected VM stop-the-world pause: {pauseTime=1687, gcTime=0, gcCount=0}
+2024-04-17 20:26:08.349+0000 INFO  [o.n.g.f.DatabaseManagementServiceFactory] Shutdown started
+2024-04-17 20:26:08.358+0000 INFO  [o.n.b.BoltServer] Requested Bolt server shutdown
+2024-04-17 20:26:08.359+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopping remaining idle connections for connector bolt-local
+2024-04-17 20:26:08.359+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopped 0 idling connections for connector bolt-local
+2024-04-17 20:26:08.359+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopping remaining idle connections for connector bolt
+2024-04-17 20:26:08.360+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopped 10 idling connections for connector bolt
+2024-04-17 20:26:08.362+0000 INFO  [o.n.d.d.DatabaseLifecycles] Stopping 'DatabaseId{5e43554e[neo4j]}'.
+2024-04-17 20:26:08.368+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [neo4j/5e43554e] Requirement `Database unavailable` makes database neo4j unavailable.
+2024-04-17 20:26:08.368+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [neo4j/5e43554e] DatabaseId{5e43554e[neo4j]} is unavailable.
+2024-04-17 20:26:08.370+0000 INFO  [o.n.k.d.Database] [neo4j/5e43554e] Waiting for closing transactions.
+2024-04-17 20:26:08.370+0000 INFO  [o.n.k.d.Database] [neo4j/5e43554e] All transactions are closed.
+2024-04-17 20:26:08.370+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [neo4j/5e43554e] Checkpoint triggered by "Database shutdown" @ txId: 47 checkpoint started...
+2024-04-17 20:26:08.380+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [neo4j/5e43554e] Checkpoint triggered by "Database shutdown" @ txId: 47 checkpoint completed in 9ms. Checkpoint flushed 23 pages (0% of total available pages), in 22 IOs. Checkpoint performed with IO limit: unlimited, paused in total 0 times( 0 millis).
+2024-04-17 20:26:08.380+0000 INFO  [o.n.k.i.t.l.p.LogPruningImpl] [neo4j/5e43554e] No log version pruned. The strategy used was '2 days 2147483648 size'. 
+2024-04-17 20:26:08.405+0000 INFO  [o.n.d.d.DatabaseLifecycles] Stopped 'DatabaseId{5e43554e[neo4j]}' successfully.
+2024-04-17 20:26:08.405+0000 INFO  [o.n.d.d.DatabaseLifecycles] Stopping 'DatabaseId{00000000[system]}'.
+2024-04-17 20:26:08.406+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [system/00000000] Requirement `Database unavailable` makes database system unavailable.
+2024-04-17 20:26:08.406+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [system/00000000] DatabaseId{00000000[system]} is unavailable.
+2024-04-17 20:26:08.406+0000 INFO  [o.n.k.d.Database] [system/00000000] Waiting for closing transactions.
+2024-04-17 20:26:08.406+0000 INFO  [o.n.k.d.Database] [system/00000000] All transactions are closed.
+2024-04-17 20:26:08.406+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [system/00000000] Checkpoint triggered by "Database shutdown" @ txId: 37 checkpoint started...
+2024-04-17 20:26:08.416+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [system/00000000] Checkpoint triggered by "Database shutdown" @ txId: 37 checkpoint completed in 9ms. Checkpoint flushed 27 pages (0% of total available pages), in 27 IOs. Checkpoint performed with IO limit: unlimited, paused in total 0 times( 0 millis).
+2024-04-17 20:26:08.416+0000 INFO  [o.n.k.i.t.l.p.LogPruningImpl] [system/00000000] No log version pruned. The strategy used was '2 days 2147483648 size'. 
+2024-04-17 20:26:08.434+0000 INFO  [o.n.d.d.DatabaseLifecycles] Stopped 'DatabaseId{00000000[system]}' successfully.
+2024-04-17 20:26:08.435+0000 INFO  [o.n.b.BoltServer] Shutting down Bolt server
+2024-04-17 20:26:08.435+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopping 0 connections for connector bolt-local
+2024-04-17 20:26:08.436+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopped all remaining connections for connector bolt-local
+2024-04-17 20:26:08.436+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopping 0 connections for connector bolt
+2024-04-17 20:26:08.436+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopped all remaining connections for connector bolt
+2024-04-17 20:26:13.460+0000 INFO  [o.n.b.BoltServer] Bolt server has been shut down
