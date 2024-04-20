@@ -29,11 +29,28 @@
     overflow-y: scroll; /* Enable vertical scrolling if needed */
   }
 
-  .notification-item {
-    margin-bottom: 10px;
+  .green-icon {
+    color: green;
   }
 
-  .notification-item:last-child {
+  .red-icon {
+    color: red;
+  }
+
+  .icon {
+    font-size: 24px;
+    position: absolute; /* Position the icon absolutely within its container */
+    top: 10%;
+    right: 10%; /* Align the icon to the top right corner */
+    margin: 5px; /* Add margin for spacing */
+  }
+
+  .alert-info {
+    width: 90%; /* Set the desired width */
+    margin-bottom: 10px; /* Add margin for spacing between alerts */
+  }
+
+  .alert-info:last-child {
     margin-bottom: 0;
   }
 
@@ -58,8 +75,10 @@
         </div>
         <div class="card-body">
           <div class="video-container">
-            <video id="liveFeed1" src="http://localhost:8001/videostreamapi/" autoplay playsinline class="video-element" style="height: 100%; width: 100%;"></video>
-            <video id="liveFeed2" src="http://localhost:8002/videostreamapi/" autoplay playsinline class="video-element" style="height: 100%; width: 100%; display: none;"></video>
+            <!-- First video element for Camera 1 -->
+            <video id="liveFeed1" autoplay playsinline class="video-element" style="height: 100%; width: 100%;"></video>
+            <!-- Second video element for Camera 2 -->
+            <video id="liveFeed2" autoplay playsinline class="video-element" style="height: 100%; width: 100%; display: none;"></video>
             <span class="camera-label" id="cameraLabel">Camera 1</span>
           </div>
         </div>
@@ -75,7 +94,7 @@
           <h5 class="card-category">Notifications</h5>
           <h4 class="card-title">Alerts & Messages</h4>
         </div>
-        <div class="card-body notifications" id="status-container">
+        <div class="card-body alert-message" id="status-container">
           <!-- Placeholder for dynamic notifications -->
          
           <!-- More notifications here -->
@@ -90,10 +109,10 @@
                   dataType: 'json',
                   success: function(data) {
                       if (data.person_detected == 'yes') {
-                          $('#status-container').html('<div class="notification-item" >Person entered the room.</div> <div class="notification-item">Light switched on.</div>');
+                          $('#status-container').html('<div class="alert alert-info" >Person entered the room.<span class="icon green-icon fas fa-user"></span></div> <div class="alert alert-info">Light switched on.<span class="icon green-icon fas fa-lightbulb"></span></div>');
                          
                       } else {
-                        $('#status-container').html('<div class="notification-item" >Person exited the room.</div> <div class="notification-item">Light switched Off.</div>');
+                        $('#status-container').html('<div class="alert alert-info" >Person exited the room.<span class="icon red-icon fas fa-user"></div> <div class="alert alert-info">Light switched Off.<span class="icon red-icon fas fa-lightbulb"></span></div>');
                       }
                   },
                   error: function(xhr, status, error) {
@@ -142,58 +161,75 @@
     });
 
   document.addEventListener('DOMContentLoaded', function() {
+          var electricityData = {
+                labels: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ],
+                datasets: [{
+                    label: "Electricity Consumption",
+                    backgroundColor: "rgba(54, 162, 235, 0.2)",
+                    borderColor: "black",
+                    borderWidth: 1,
+                    data: [50, 45, 48, 55, 52, 47, 49, 50, 23, 34 ,58, 68], // Sample data for electricity consumption
+                }],
+            };
 
-    var consumptionData = {
-      labels: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ],
-      datasets: [{
-        label: 'Electricity Consumption',
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1,
-        data: [50, 45, 48, 55, 52, 47, 49, 50, 23, 34 ,58, 68] // Sample data for electricity consumption
-      }]
-    };
+            // Get the canvas element
+            var ctx = document.getElementById('electricityConsumptionChart').getContext('2d');
 
-    var consumptionCtx = document.getElementById('electricityConsumptionChart').getContext('2d');
-    var consumptionChart = new Chart(consumptionCtx, {
-      type: 'bar',
-      data: consumptionData,
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
+            // Create the chart
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: electricityData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Set to false to adjust chart size to container
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: 'black',
+                            },
+                            grid: {
+                                color: 'black', // Set the color of the grid lines to a lighter shade
+                            },
+                        },
+                        x: {
+                            ticks: {
+                                color: 'black', // Set the color of the x-axis labels to white
+                            },
+                        },
+                    },
+                },
+            });
+
 
     var liveFeed1 = document.getElementById('liveFeed1');
-  var liveFeed2 = document.getElementById('liveFeed2');
-  var cameraLabel = document.getElementById('cameraLabel');
-  var currentCamera = 1; // Start with Camera 1
+    var liveFeed2 = document.getElementById('liveFeed2');
+    var cameraLabel = document.getElementById('cameraLabel');
+    var currentCamera = 1; // Start with Camera 1
 
-  // Function to switch between cameras
-  function switchCamera() {
-    if (currentCamera === 1) {
-      liveFeed1.style.display = 'block'; // Show Camera 1
-      liveFeed2.style.display = 'none'; // Hide Camera 2
-      cameraLabel.textContent = 'Camera 1'; // Update label to Camera 1
-      currentCamera = 2; // Switch to Camera 2 next
-    } else {
-      liveFeed1.style.display = 'none'; // Hide Camera 1
-      liveFeed2.style.display = 'block'; // Show Camera 2
-      cameraLabel.textContent = 'Camera 2'; // Update label to Camera 2
-      currentCamera = 1; // Switch back to Camera 1 next
+    // Function to switch between cameras
+    function switchCamera() {
+      if (currentCamera === 1) {
+        liveFeed1.style.display = 'block'; // Show Camera 1
+        liveFeed2.style.display = 'none'; // Hide Camera 2
+        cameraLabel.textContent = 'Camera 1'; // Update label to Camera 1
+        currentCamera = 2; // Switch to Camera 2 next
+      } else {
+        liveFeed1.style.display = 'none'; // Hide Camera 1
+        liveFeed2.style.display = 'block'; // Show Camera 2
+        cameraLabel.textContent = 'Camera 2'; // Update label to Camera 2
+        currentCamera = 1; // Switch back to Camera 1 next
+      }
     }
-  }
 
-  // Initial setup: Start with Camera 1 and switch every 5 seconds
-  setInterval(switchCamera, 5000);
+    // Initial setup: Start with Camera 1 and switch every 5 seconds
+    setInterval(switchCamera, 5000);
 
-  if (navigator.mediaDevices.getUserMedia) {
+    // JavaScript code to capture video from the second camera (Camera 2)
+    if (navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: true })
         .then(function(stream) {
-          liveFeed1.srcObject = stream; // Assign the stream to the second video element
+          liveFeed2.srcObject = stream; // Assign the stream to the second video element
         })
         .catch(function(error) {
           console.log("Something went wrong when accessing the second camera!");
