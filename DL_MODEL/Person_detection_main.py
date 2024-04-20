@@ -1,29 +1,62 @@
+import asyncio
 import cv2
 import numpy as np
 import requests
 import os
 import json
+import time
+<<<<<<< HEAD
 import serial
+from neo4j import GraphDatabase
+filepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data.json'))
+uri = "neo4j://neo4j-container:7687"
+username = "neo4j"
+password = "password"
+query = (
+        "MATCH (:Camera)-[:CONNECTED_TO]->(bulb:Bulb) "
+        "RETURN bulb.pin"
+    )
+driver = GraphDatabase.driver(uri, auth=(username, password))
 from DatabaseUpdate import Database_Update as kinderneutron
+=======
+from DatabaseUpdate import Database_Update as kinderneutron
+
+>>>>>>> 79df5adaa0a8e5291cd84c81e645f77febd532b8
 # Load YOLO
 kn = kinderneutron()
 net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
 layer_names = net.getUnconnectedOutLayersNames()
-#ser = serial.Serial('/dev/ttyACM0', 9600)
+
+# Define global variables
+video_feed_url = 'http://kinderneutronapicontainer:8001/videostreamapi'
 filepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data.json'))
-# Function to process video frames and perform object detection
-def process_frame(frame):
+<<<<<<< HEAD
+ser = serial.Serial('/dev/ttyACM0', 9600)
+# Distance thresholds for near and far detection (you can adjust these values)
+NEAR_DISTANCE_THRESHOLD = 900  # Example threshold for near detection (pixels)
+FAR_DISTANCE_THRESHOLD = 50   # Example threshold for far detection (pixels)
+=======
+>>>>>>> 79df5adaa0a8e5291cd84c81e645f77febd532b8
+
+# Asynchronous function to process video frames and perform object detection
+async def process_frame(frame):
     height, width, _ = frame.shape
 
     # Convert the frame to a blob
-    blob = cv2.dnn.blobFromImage(frame, 1/255.0, (416, 416), swapRB=True, crop=False)
+    blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (218, 218), swapRB=True, crop=False)
     net.setInput(blob)
 
     # Forward pass through the network
     detections = net.forward(layer_names)
 
+<<<<<<< HEAD
+    # Flag and distance to store person detection and distance information
+    person_detected = False
+    distance_to_person = None
+=======
     # Flag to check if a person is detected
     person_detected = False
+>>>>>>> 79df5adaa0a8e5291cd84c81e645f77febd532b8
 
     # Process the detections
     for detection in detections:
@@ -38,25 +71,44 @@ def process_frame(frame):
                 w = int(obj[2] * width)
                 h = int(obj[3] * height)
 
+<<<<<<< HEAD
+                # Calculate distance based on bounding box size (you may need calibration for accurate distance estimation)
+                box_size = max(w, h)
+                if 450 <box_size <= NEAR_DISTANCE_THRESHOLD:
+                    distance_to_person = 'near'
+                elif 450>=box_size >= FAR_DISTANCE_THRESHOLD:
+                    distance_to_person = 'far'
+                else:
+                    distance_to_person = 'unknown'
+
+=======
+>>>>>>> 79df5adaa0a8e5291cd84c81e645f77febd532b8
                 # Draw a bounding box around the person
                 x = int(center_x - w/2)
                 y = int(center_y - h/2)
 
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                
                 person_detected = True
 
+<<<<<<< HEAD
+    return frame, person_detected, distance_to_person
+
+# Asynchronous function to fetch and process video frames
+async def process_video_feed_async(url):
+    flag = ''
+=======
     return frame, person_detected
 
-# Main function to process video frames from the HTTP video feed
-def process_video_feed(url):
+# Asynchronous function to fetch and process video frames
+async def process_video_feed_async(url):
+>>>>>>> 79df5adaa0a8e5291cd84c81e645f77febd532b8
     response = requests.get(url, stream=True)
     if response.status_code != 200:
         print("Error fetching video feed:", response.status_code)
         return
 
     bytes_data = bytes()
-    for chunk in response.iter_content(chunk_size=10):
+    for chunk in response.iter_content(chunk_size=100):
         bytes_data += chunk
         a = bytes_data.find(b'\xff\xd8')  # Start of frame
         b = bytes_data.find(b'\xff\xd9')  # End of frame
@@ -64,30 +116,105 @@ def process_video_feed(url):
             frame_data = bytes_data[a:b + 2]
             bytes_data = bytes_data[b + 2:]
             frame = cv2.imdecode(np.frombuffer(frame_data, dtype=np.uint8), cv2.IMREAD_COLOR)
+            # Process the frame asynchronously (perform object detection)
+<<<<<<< HEAD
+            processed_frame, person_detected, distance = await process_frame(frame)
 
-            # Process the frame (perform object detection)
-            processed_frame, person_detected = process_frame(frame)
-
-            # Display the processed frame
-            #cv2.imshow('Human Detection', processed_frame)
-
+            # Handle the processed frame (e.g., display, save to file)
             if person_detected:
-                print("Person Detected! Acknowledgement: Present")
-               # ser.write(b'H')
+                if distance == 'near':
+                    if flag != 'near':
+                        print("Person Detected Near Camera")
+                        bulbs_pins = fetch_bulb_pins('near')
+                        print(bulbs_pins)
+                        ser.write(bytes(str(bulbs_pins), 'utf-8'))
+                        flag = 'near'
+                        jsonupdate(bulbs_pins)
+                    # Perform actions for near detection
+                elif distance == 'far':
+                    if flag != 'far':
+                        print("Person Detected Far from Camera")
+                        bulbs_pins = fetch_bulb_pins('far')
+                        print(bulbs_pins)
+                        flag = 'far'
+                        ser.write(bytes(str(bulbs_pins), 'utf-8'))
+
+                        jsonupdate(bulbs_pins)
+                else:
+                    print("Person Detected (Distance Unknown)")
+                    # Perform actions for unknown distance detection
+            else:
+                print("Person Not Detected")
+                jsonupdate([])
+                ser.write(bytes('', 'utf-8'))
+
+
+
+def fetch_bulb_pins(location):
+    
+    with driver.session() as session:
+        if location.lower() == "near":
+            query = (
+                "MATCH (:Near)-[:CONNECTED_TO]->(bulb:Bulb) "
+                "RETURN bulb.name AS bulb_name, bulb.pin AS bulb_pin"
+            )
+        elif location.lower() == "far":
+            query = (
+                "MATCH (:Far)-[:CONNECTED_TO]->(bulb:Bulb) "
+                "RETURN bulb.name AS bulb_name, bulb.pin AS bulb_pin"
+            )
+        else:
+            return "Invalid location parameter. Use 'near' or 'far'."
+
+        result = session.run(query)
+        bulbs = [(record["bulb_name"], record["bulb_pin"]) for record in result]
+        ans = []
+        for i in bulbs:
+            ans.append(i[1])
+        return ans
+        
+def jsonupdate(val):
+    with open(filepath, 'r+') as file:
+            data = json.load(file)
+            data['pins'] = val
+            file.seek(0)
+            json.dump(data, file, indent=4)
+            file.truncate()
+            print("JSON file updated successfully.")
+
+=======
+            processed_frame, person_detected = await process_frame(frame)
+
+            # Handle the processed frame (e.g., display, save to file)
+            if person_detected:
+                
+                # ser.write(b'H')
                 if checkjson() == 'no':
+                    print("Person Detected! Acknowledgement: Present")
                     jsonupdate('yes')
                     kn.dbupdate()
-                
             else:
-                print("Person Not Detected! Acknowledgement: Absent")
-               # ser.write(b'L')
+                
+                # ser.write(b'L')
                 if checkjson() == 'yes':
+                    print("Person Not Detected")
                     jsonupdate('no')
                     kn.dbupdate()
-                
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+                # Perform actions based on detection
+>>>>>>> 79df5adaa0a8e5291cd84c81e645f77febd532b8
+async def main():
+    # Create tasks for asynchronous processing
+    tasks = [process_video_feed_async(video_feed_url) for _ in range(4)]  # Create 4 tasks
 
+    # Run tasks concurrently using asyncio.gather()
+    await asyncio.gather(*tasks)
+<<<<<<< HEAD
+
+if __name__ == "__main__":
+    while True:
+        asyncio.run(main())  # Run the main coroutine asynchronously
+
+=======
 def jsonupdate(val):
     with open(filepath, 'r+') as file:
             data = json.load(file)
@@ -96,17 +223,11 @@ def jsonupdate(val):
             json.dump(data, file, indent=4)
             file.truncate()
             print("JSON file updated successfully.")
-
 def checkjson():
     with open(filepath, 'r+') as file:
             data = json.load(file)
             return data['person_detected']
-           
-
-
-# Example usage
-
-video_feed_url = 'http://kinderneutronapicontainer:8001/videostreamapi'  # Replace with your server URL
-process_video_feed(video_feed_url)
-cv2.destroyAllWindows()
-#ser.close() 
+if __name__ == "__main__":
+    while True:
+        asyncio.run(main())  # Run the main coroutine asynchronously
+>>>>>>> 79df5adaa0a8e5291cd84c81e645f77febd532b8
