@@ -62,10 +62,10 @@
     </div>
 {% endblock content %}
 
-{% block javascripts %}
+{{% block javascripts %}
     <!-- Include Chart.js library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script> -->
+    <script src="/static/assets/js/plugins/chartjs.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Sample data for the chart (you can replace this with your actual data)
@@ -94,7 +94,7 @@
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                color: 'white',
+                                color: 'white', // Set the color of the y-axis labels to white
                             },
                             grid: {
                                 color: 'black', // Set the color of the grid lines to a lighter shade

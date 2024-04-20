@@ -1,87 +1,110 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Alerts {% endblock %} 
+{% block title %} Alerts {% endblock %}
 
-<!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+  .green-icon {
+    color: green;
+  }
+
+  .red-icon {
+    color: red;
+  }
+
+  .icon {
+    font-size: 24px;
+    margin-left: 150px; /* Move the icon to the right */
+  }
+
+  .alert-message {
+    margin-bottom: 10px;
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Align items vertically */
+  }
+</style>
+{% endblock stylesheets %}
 
 {% block content %}
 
-    <div class="panel-header">
-      <div class="header text-center">
-        <h2 class="title">Notifications</h2>
+<div class="panel-header">
+  <div class="header text-center">
+    <h2 class="title">Notifications</h2>
+  </div>
+</div>
+
+<div class="content">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Person Status</h4>
+        </div>
+        <div class="card-body alert-message" id='status-container'>
+          <!-- Placeholder for person status -->
+        </div>
       </div>
     </div>
-    <div class="content">
-      <div class="row">
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-header">
-              <h4 class="card-title">Person Status</h4>
-            </div>
-            <div class="card-body" id ='status-container'>
-            </div>
-          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    function updateData() {
-        $.ajax({
-            url: '{% url "ajax_update_data" %}',  // URL to your AJAX endpoint
-            type: 'GET',
-            dataType: 'json',
-            
-            success: function(data) {
-                if (data.person_detected == 'yes') {
-                    
-                    $('#status-container').html('<div class="alert alert-info"><span>Person entered the room.</span></div>');
-                    $('#light-status').html('<div class="alert alert-info"><span>Light Is On</span></div>');
-                } else {
-                    $('#status-container').html('<div class="alert alert-info"><span>Person exited the room.</span></div>');
-                    $('#light-status').html('<div class="alert alert-info"><span>Light Is Off</span></div>');
-                  }
-            },
-            error: function(xhr, status, error) {
-                console.log('Error updating data:', error);
-            }
-        });
-    }
-
-    // Call updateData function initially and every 5 seconds (adjust interval as needed)
-    updateData();  // Update data initially
-    setInterval(updateData, 1000);  // Update data every 5 seconds
-</script>
-
-          
-          </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Light Status</h4>
         </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-header">
-              <h4 class="card-title">Light Status</h4>
-            </div>
-            <div class="card-body" id="light-status">
-             
-            </div>
-          </div>
+        <div class="card-body alert-message" id="light-status">
+          <!-- Placeholder for light status -->
         </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-header">
-              <h4 class="card-title">Error Status</h4>
-            </div>
-            <div class="card-body">
-              <div class="alert alert-danger">
-                <span>Error: Motion sensor malfunction.</span>
-              </div>
-              <div class="alert alert-danger">
-                <span>Error: Connection lost.</span>
-              </div>
-            </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Error Status</h4>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-danger">
+            <span>Error: Motion sensor malfunction.</span>
+          </div>
+          <div class="alert alert-danger">
+            <span>Error: Connection lost.</span>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
 
 {% endblock content %}
 
-<!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  function updateData() {
+    $.ajax({
+      url: '{% url "ajax_update_data" %}', // URL to your AJAX endpoint
+      type: 'GET',
+      dataType: 'json',
+
+      success: function(data) {
+        if (data.person_detected == 'yes') {
+          $('#status-container').html('<div class="alert alert-info">Person entered the room<span class="icon green-icon fas fa-user"></span></div>');
+        } else {
+          $('#status-container').html('<div class="alert alert-info">Person exited the room<span class="icon red-icon fas fa-user"></span></div>');
+        }
+
+        if (data.light_status == 'on') {
+          $('#light-status').html('<div class="alert alert-info">Light is On<span class="icon green-icon fas fa-lightbulb"></span></div>');
+        } else {
+          $('#light-status').html('<div class="alert alert-info">Light is Off<span class="icon red-icon fas fa-lightbulb"></span></div>');
+        }
+      },
+      error: function(xhr, status, error) {
+        console.log('Error updating data:', error);
+      }
+    });
+  }
+
+  // Call updateData function initially and every 5 seconds (adjust interval as needed)
+  updateData(); // Update data initially
+  setInterval(updateData, 5000); // Update data every 5 seconds
+</script>
+{% endblock javascripts %}
