@@ -51,14 +51,17 @@
     <!-- Card for Live Video -->
     <div class="col-lg-4">
       <a href="/camerafeed.html">
-      <div class="card first-card">
+      <div class="card first-card" style="color:rgb(56, 55, 55);">
         <div class="card-header">
           <h5 class="card-category">Live Stream</h5>
           <h4 class="card-title" style="color:rgb(56, 55, 55);">Camera Feed</h4>
         </div>
         <div class="card-body">
-          <!-- <video id="liveFeed" autoplay playsinline muted class="img-fluid"></video> -->
-          <img id="liveFeed" src="http://localhost:8001/videostreamapi/" alt="Live Stream" autoplay playsinline muted class="img-fluid">
+          <div class="video-container">
+            <video id="liveFeed1" src="http://localhost:8001/videostreamapi/" autoplay playsinline class="video-element" style="height: 100%; width: 100%;"></video>
+            <video id="liveFeed2" src="http://localhost:8002/videostreamapi/" autoplay playsinline class="video-element" style="height: 100%; width: 100%; display: none;"></video>
+            <span class="camera-label" id="cameraLabel">Camera 1</span>
+          </div>
         </div>
       </div>
     </a>
@@ -164,15 +167,36 @@
       }
     });
 
-    var video = document.querySelector('#liveFeed');
+    var liveFeed1 = document.getElementById('liveFeed1');
+  var liveFeed2 = document.getElementById('liveFeed2');
+  var cameraLabel = document.getElementById('cameraLabel');
+  var currentCamera = 1; // Start with Camera 1
 
-    if (navigator.mediaDevices.getUserMedia) {
+  // Function to switch between cameras
+  function switchCamera() {
+    if (currentCamera === 1) {
+      liveFeed1.style.display = 'block'; // Show Camera 1
+      liveFeed2.style.display = 'none'; // Hide Camera 2
+      cameraLabel.textContent = 'Camera 1'; // Update label to Camera 1
+      currentCamera = 2; // Switch to Camera 2 next
+    } else {
+      liveFeed1.style.display = 'none'; // Hide Camera 1
+      liveFeed2.style.display = 'block'; // Show Camera 2
+      cameraLabel.textContent = 'Camera 2'; // Update label to Camera 2
+      currentCamera = 1; // Switch back to Camera 1 next
+    }
+  }
+
+  // Initial setup: Start with Camera 1 and switch every 5 seconds
+  setInterval(switchCamera, 5000);
+
+  if (navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: true })
         .then(function(stream) {
-          video.srcObject = stream;
+          liveFeed1.srcObject = stream; // Assign the stream to the second video element
         })
         .catch(function(error) {
-          console.log("Something went wrong when accessing the camera!");
+          console.log("Something went wrong when accessing the second camera!");
         });
     }
   });
