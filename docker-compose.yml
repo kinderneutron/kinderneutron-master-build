@@ -56,6 +56,8 @@
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
+    networks:
+      - kinderneutron_network
   
    neo4j:
     image: neo4j:latest
