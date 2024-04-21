@@ -14,7 +14,7 @@
       <div class="box">
         <div class="inner-box">
           <div class="forms-wrap">
-            <form action="http://localhost:8000/auth/" autocomplete="off" class="sign-in-form">
+            <form action="http://localhost:8000/auth/" autocomplete="off" class="sign-in-form" onsubmit="handleLogin(event)">
               <div class="logo">
                 <img src="{% static './img/icon.jpeg' %}" alt="easyclass"/>
                 <h2>KinderNeutron</h2>
@@ -52,8 +52,7 @@
                 {% if request.GET.show_div %}
                 <div style="color: red;">Wrong Username or Password</div>
                 {% endif %}
-                <input type="submit" value="Sign In" class="sign-btn" />
-
+                <input type="submit" value="Sign In" class="sign-btn"/>
                 <p class="text" style="font-size: 15px;">
                   New To Kinderneuton?
                  
@@ -62,7 +61,7 @@
               </div>
             </form>
 
-            <form action="http://127.0.0.1:8000/login/" autocomplete="off" class="sign-up-form" id="signupForm">
+            <form action="http://127.0.0.1:8000/login/" autocomplete="off" class="sign-up-form" id="signupForm" >
               <div class="logo">
                 <img src="{% static './img/icon.jpeg' %}" alt="easyclass" />
                 <h2>KinderNeutron</h2>
@@ -169,5 +168,17 @@
     <!-- Javascript file -->
 
     <script src="{% static 'app.js' %}"></script>
+    <script>
+      function handleLogin(event) {
+        event.preventDefault();
+        const form = event.target;
+        const username = form.querySelector('[name="username"]').value;
+        // Store the username in session storage
+        
+        sessionStorage.setItem('username', username);
+        // Proceed with the form submission
+        form.submit();
+      }
+      </script>
   </body>
 </html>
