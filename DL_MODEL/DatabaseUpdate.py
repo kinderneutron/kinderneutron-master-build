@@ -8,7 +8,7 @@ class Database_Update:
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM detection")
         records = cursor.fetchone()  
-        if records == 0:
+        if records[0] == 0:
             self.detection_id = 1
         else:
             cursor.execute("SELECT id FROM detection ORDER BY created_at DESC LIMIT 1")
@@ -16,6 +16,7 @@ class Database_Update:
             (records,) = records
             self.detection_id = int(records[len("DET-0"):])+1
         self.error_id = 1
+        
     def dbupdate(self):
         filepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data.json'))
         person_detection_status = ''

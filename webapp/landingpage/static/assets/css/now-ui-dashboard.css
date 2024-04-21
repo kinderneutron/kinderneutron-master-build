@@ -2788,9 +2788,10 @@ Created using IcoMoon - icomoon.io
   height: 260px;
   padding-top: 80px;
   padding-bottom: 45px;
-  background: #141E30;
+  background:black;
+  /* background: #141E30; */
   /* fallback for old browsers */
-  background: linear-gradient(to right, #0c2646 0%, #204065 60%, #2a5788 100%);
+  background: linear-gradient(to right, black 0%, black 60%, black 100%);
   position: relative;
   overflow: hidden; }
   .panel-header .header .title {

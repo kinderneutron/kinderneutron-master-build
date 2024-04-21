@@ -17,6 +17,14 @@ import psycopg2
 import requests
 import json
 import os
+import pika
+RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
+RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', '5672')
+RABBITMQ_USERNAME = os.getenv('RABBITMQ_DEFAULT_USER', 'admin')
+RABBITMQ_PASSWORD = os.getenv('RABBITMQ_DEFAULT_PASS', 'admin')
+global last_message
+last_message='no'
+
 detection_id = 1
 error_id = 1
 filepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..', 'data.json'))
@@ -26,6 +34,31 @@ def index(request):
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 
+
+def consume_rabbitmq_message():
+    try:
+        credentials = pika.PlainCredentials(RABBITMQ_USERNAME, RABBITMQ_PASSWORD)
+        connection_params = pika.ConnectionParameters(host=RABBITMQ_HOST, port=RABBITMQ_PORT, credentials=credentials)
+        connection = pika.BlockingConnection(connection_params)
+        channel = connection.channel()
+        
+        queue_name = 'person_detection'
+        channel.queue_declare(queue=queue_name)
+
+        method_frame, header_frame, body = channel.basic_get(queue=queue_name, auto_ack=True)
+        if body:
+            message = json.loads(body.decode('utf-8'))
+            print("Message consumed:", message)
+            connection.close()  # Close the connection after consuming
+            return message
+        else:
+            print("No message available")
+            connection.close()  # Close the connection even if no message is consumed
+            return None
+    except Exception as e:
+        print(f"Error consuming RabbitMQ message: {e}")
+        return None
+    
 
 # @login_required(login_url="/login/")
 def pages(request):
@@ -42,17 +75,14 @@ def pages(request):
     try:
 
         load_template = request.path.split('/')[-1]
-
         if load_template == 'admin':
             return HttpResponseRedirect(reverse('admin:index'))
         context['segment'] = load_template
         context['detection_data'] = detection_data
         context['error_logs'] = error_log_data
         context['devices'] = device_log_data
-        with open(filepath, 'r') as file:
-            data = json.load(file)
-            context['json_data'] = data['person_detected']
-            print(context['json_data'])
+        context['json_data'] = last_message
+        print(context['json_data'])
        
 
         html_template = loader.get_template('home/' + load_template)
@@ -73,13 +103,23 @@ from django.http import JsonResponse
 def ajax_update_data(request):
     # Logic to update data dynamically (e.g., read JSON file or fetch data from database)
     # Replace this with your actual logic to update data
-
+    
+    global last_message
     try:
-        filepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..', 'data.json'))
-        with open(filepath, 'r') as file:
-            data = json.load(file)
-            person_detected = data.get('person_detected', 'no')  # Get 'person_detected' value from JSON data
-
-        return JsonResponse({'person_detected': person_detected})
+        # Check if there's a new message available
+        new_message = consume_rabbitmq_message()
+        print(new_message)
+        print(last_message)
+        if new_message:
+            if new_message['near']== True or new_message['far']==True:
+                last_message='yes'
+                
+                return JsonResponse({'person_detected': 'yes'})
+                # Return the last consumed message as JSON response
+            else:
+                last_message='no'
+                return JsonResponse({'person_detected': 'no'})
+        else:
+            return JsonResponse({'person_detected': last_message})
     except Exception as e:
         return e

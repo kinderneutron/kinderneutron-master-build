@@ -38,6 +38,14 @@
       - ./requirements.txt:/kinderneutron/requirements.txt
      networks:
       - kinderneutron_network
+      
+   redis:
+    image: redis:latest
+    container_name: redis_server
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
 
    rabbitmq:
     image: rabbitmq:management
@@ -48,7 +56,29 @@
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
-
+    networks:
+      - kinderneutron_network
+  
+   neo4j:
+    image: neo4j:latest
+    container_name: neo4j-container
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./data:/data
+      - ./logs:/logs
+      - ./import:/var/lib/neo4j/import
+      - ./plugins:/plugins
+    networks:
+      - kinderneutron_network
+    environment:
+      NEO4J_AUTH: neo4j/password
+      NEO4JLABS_PLUGINS: '["apoc", "graph-data-science"]'
+      NEO4J_apoc_import_file_enabled: 'true'
+      NEO4J_dbms_memory_heap_initial__size: 1G
+      NEO4J_dbms_memory_heap_max__size: 2G
+      
    psql-db:
     image: 'postgres:14'
     container_name: psql-db
@@ -66,6 +96,8 @@
   volumes:
     db:
       driver: local 
+    redis_data:
+      driver: local
   
 
   networks:

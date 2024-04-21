@@ -1,1 +1,8 @@
+<<<<<<< HEAD
 yolov3.weights
+data/
+import/
+plugins/
+=======
+yolov3.weights
+>>>>>>> 79df5adaa0a8e5291cd84c81e645f77febd532b8

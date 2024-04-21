@@ -4,6 +4,7 @@ import psycopg2
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
+import requests
 from django.urls import resolve
 from django.apps.registry import apps
 name = ""
@@ -24,20 +25,13 @@ def loginpageres(request):
    (email is not None and email != "N/A") and \
    (auth_token is not None and auth_token != "N/A") and \
    (password is not None and password != "N/A"):
-          conn = psycopg2.connect(dbname="kinderneutron_db", user="postgres",  password="123456",  host="psql-db", port="5432")
-          with conn.cursor() as cursor:
-        # The SQL INSERT query
-               query = """INSERT INTO "user" (username, email, password) VALUES (%s, %s,%s)"""
-        
-        # Data to insert
-               data = (username,email, password)
-        
-        # Execute the query
-               cursor.execute(query, data)
-        
-        # Commit the transaction
-               conn.commit()
-          
+          data =   {
+        "username": username,
+        "email": email,
+        "auth_token": auth_token,
+        "password": password
+    }
+          requests.post("http://kinderneutronapicontainer:8001/userapi/",data=data)
      return render(request, 'index.html', context)
     
 

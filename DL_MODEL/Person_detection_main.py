@@ -1,31 +1,45 @@
+import asyncio
 import cv2
 import numpy as np
 import requests
 import os
 import json
-import serial
+import time
+from neo4j import GraphDatabase
 from DatabaseUpdate import Database_Update as kinderneutron
+import copy
+import pika
+
+RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
+RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', '5672')
+RABBITMQ_USERNAME = os.getenv('RABBITMQ_DEFAULT_USER', 'admin')
+RABBITMQ_PASSWORD = os.getenv('RABBITMQ_DEFAULT_PASS', 'admin')
+
+# Define global variables
+NEAR_DISTANCE_THRESHOLD = 900  # Example threshold for near detection (pixels)
+FAR_DISTANCE_THRESHOLD = 50    # Example threshold for far detection (pixels)
+filepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data.json'))
+video_feed_url = 'http://kinderneutronapicontainer:8001/videostreamapi'
+
 # Load YOLO
 kn = kinderneutron()
 net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
 layer_names = net.getUnconnectedOutLayersNames()
-#ser = serial.Serial('/dev/ttyACM0', 9600)
-filepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data.json'))
-# Function to process video frames and perform object detection
-def process_frame(frame):
+global person_detection_status
+global temp_detection_status
+# Initialize dictionary for person detection status
+person_detection_status = {'near': False, 'far': False}
+temp_detection_status={'near':False,'far':False}
+# Asynchronous function to process video frames and perform object detection
+async def process_frame(frame):
     height, width, _ = frame.shape
-
-    # Convert the frame to a blob
-    blob = cv2.dnn.blobFromImage(frame, 1/255.0, (416, 416), swapRB=True, crop=False)
+    blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (218, 218), swapRB=True, crop=False)
     net.setInput(blob)
-
-    # Forward pass through the network
     detections = net.forward(layer_names)
 
-    # Flag to check if a person is detected
-    person_detected = False
+    detected_near = False
+    detected_far = False
 
-    # Process the detections
     for detection in detections:
         for obj in detection:
             scores = obj[5:]
@@ -38,18 +52,30 @@ def process_frame(frame):
                 w = int(obj[2] * width)
                 h = int(obj[3] * height)
 
-                # Draw a bounding box around the person
+                box_size = max(w, h)
+                if 450 < box_size <= NEAR_DISTANCE_THRESHOLD:
+                    detected_near = True
+                elif 450 >= box_size >= FAR_DISTANCE_THRESHOLD:
+                    detected_far = True
+
                 x = int(center_x - w/2)
                 y = int(center_y - h/2)
 
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                
-                person_detected = True
 
-    return frame, person_detected
+    return frame, detected_near, detected_far
 
-# Main function to process video frames from the HTTP video feed
-def process_video_feed(url):
+# Asynchronous function to fetch and process video frames
+async def process_video_feed_async(url):
+    global person_detection_status
+    global temp_detection_status
+    credentials = pika.PlainCredentials(RABBITMQ_USERNAME, RABBITMQ_PASSWORD)
+    connection_params = pika.ConnectionParameters(host=RABBITMQ_HOST, port=RABBITMQ_PORT, credentials=credentials)
+    connection = pika.BlockingConnection(connection_params)
+    channel = connection.channel()
+    channel.queue_declare(queue='person_detection', durable=False) 
+
+
     response = requests.get(url, stream=True)
     if response.status_code != 200:
         print("Error fetching video feed:", response.status_code)
@@ -64,49 +90,39 @@ def process_video_feed(url):
             frame_data = bytes_data[a:b + 2]
             bytes_data = bytes_data[b + 2:]
             frame = cv2.imdecode(np.frombuffer(frame_data, dtype=np.uint8), cv2.IMREAD_COLOR)
-
-            # Process the frame (perform object detection)
-            processed_frame, person_detected = process_frame(frame)
-
-            # Display the processed frame
-            #cv2.imshow('Human Detection', processed_frame)
-
-            if person_detected:
-                print("Person Detected! Acknowledgement: Present")
-               # ser.write(b'H')
-                if checkjson() == 'no':
-                    jsonupdate('yes')
-                    kn.dbupdate()
+            processed_frame, detected_near, detected_far = await process_frame(frame)
+            
+            if detected_near:
+                # print("Person Detected Near Camera")
+                temp_detection_status['near']=True
                 
             else:
-                print("Person Not Detected! Acknowledgement: Absent")
-               # ser.write(b'L')
-                if checkjson() == 'yes':
-                    jsonupdate('no')
-                    kn.dbupdate()
-                
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+                temp_detection_status['near']=False
+            
+            if detected_far:
+                # print("Person Detected Far from Camera")
+                temp_detection_status['far'] = True
+            else:
+                temp_detection_status['far'] = False
+            
+            print(temp_detection_status,'temp_status')
+            print(person_detection_status,'person_detection_status')
+            if temp_detection_status.get('near') != person_detection_status.get('near') or temp_detection_status.get('far') != person_detection_status.get('far'):
+                print('Detection status changed. Publishing message.')
+                print(' ')
+                print('----------------------------------------------')
+                print(' ')
+                person_detection_status = copy.deepcopy(temp_detection_status)
+                print('New person detection status:', person_detection_status)
+                channel.basic_publish(exchange='', routing_key='person_detection', body=json.dumps(person_detection_status),
+                                    properties=pika.BasicProperties(delivery_mode=2))
+            else:
+                print('Detection status unchanged. Not publishing message.')
 
-def jsonupdate(val):
-    with open(filepath, 'r+') as file:
-            data = json.load(file)
-            data['person_detected'] = val
-            file.seek(0)
-            json.dump(data, file, indent=4)
-            file.truncate()
-            print("JSON file updated successfully.")
+async def main():
+    tasks = [process_video_feed_async(video_feed_url) for _ in range(4)]
+    await asyncio.gather(*tasks)
 
-def checkjson():
-    with open(filepath, 'r+') as file:
-            data = json.load(file)
-            return data['person_detected']
-           
-
-
-# Example usage
-
-video_feed_url = 'http://kinderneutronapicontainer:8001/videostreamapi'  # Replace with your server URL
-process_video_feed(video_feed_url)
-cv2.destroyAllWindows()
-#ser.close() 
+if __name__ == "__main__":
+    while True:
+        asyncio.run(main())

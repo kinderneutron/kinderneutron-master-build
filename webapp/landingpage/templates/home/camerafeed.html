@@ -3,64 +3,130 @@
 {% block title %} Live Camera Feed {% endblock %}
 
 {% block stylesheets %}
-    <!-- Include CSS stylesheets here -->
-    <style>
-        /* Custom styles for full-screen video */
-        #videoContainer {
-            position: relative;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: calc(100vh - 80px); /* Adjust 80px based on your header/dashboard height */
-            background-color: black; /* Optional: Set a background color */
-        }
+<!-- Include CSS stylesheets here -->
+<style>
+    .video-container {
+        position: relative;
+        width: 100%;
+        height: calc(50vh - 40px); /* Adjust height based on your needs */
+        background-color: black; /* Optional: Set a background color */
+        cursor: pointer; /* Indicates that the element is clickable */
+    }
 
-        #videoElement {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Maintain aspect ratio and cover the entire container */
-        }
-    </style>
+    .video-element {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Maintain aspect ratio and cover the entire container */
+    }
+
+    #fullScreenVideoContainer {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top:0;
+        bottom:0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black; /* Optional: Set a background color */
+        cursor: pointer;  /* Ensure it's on top of other content */
+        z-index: 1000; /* Ensure it's above other elements */
+    }
+
+    #fullScreenVideo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .camera-label {
+        position: absolute;
+        /* bottom: 100px; */
+        left: 20px;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 5px 10px;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+
+    #fullScreenLabel {
+        position: absolute;
+        top: 20px;
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%); /* Ensure it is centered */
+        font-size: 24px;
+        padding: 10px 20px;
+    }
+</style>
 {% endblock stylesheets %}
 
 {% block content %}
-    <div class="panel-header panel-header-sm">
-        <div class="header text-center">
-            <h3 class="title" style="color: white;">Live Camera Feed</h3>
+<div class="panel-header panel-header-md">
+    <div class="header text-center">
+        <h3 class="title" style="color: white; padding-top: 20px;">Live Camera Feed</h3>
+    </div>
+</div>
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="video-container" onclick="openFullScreen('http://localhost:8001/videostreamapi/', 'Camera 1', 'liveFeed1')">
+                <video id="liveFeed1" class="video-element" autoplay playsinline muted></video>
+                <span class="camera-label">Camera 1</span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="video-container" onclick="openFullScreen('http://localhost:8002/videostreamapi/', 'Camera 2', 'liveFeed2')">
+                <video id="liveFeed2" class="video-element" autoplay playsinline muted></video>
+                <span class="camera-label">Camera 2</span>
+            </div>
         </div>
     </div>
-    <div id="videoContainer">
-        <img id="videoElement" src="http://localhost:8001/videostreamapi/" alt="Live Stream">
-    </div>
+</div>
+<div id="fullScreenVideoContainer" onclick="closeFullScreen()">
+    <video id="fullScreenVideo" src="" autoplay playsinline muted></video>
+    <span id="fullScreenLabel" class="camera-label"></span>
+</div>
 {% endblock content %}
 
 {% block javascripts %}
-    <!-- JavaScript code for live camera feed -->
-    <script>
-        var video = document.getElementById('videoElement');
-        // Fetch the live video stream from the API endpoint
-        async function fetchLiveVideo(url) {
-           
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      alert('error')
+<script>
+    function openFullScreen(url, label, videoId) {
+        var fullScreenContainer = document.getElementById('fullScreenVideoContainer');
+        var fullScreenVideo = document.getElementById('fullScreenVideo');
+        var fullScreenLabel = document.getElementById('fullScreenLabel');
+        var videoElement = document.getElementById(videoId);
+        
+        fullScreenVideo.srcObject = videoElement.srcObject; // Set the source for the full screen video
+        fullScreenLabel.textContent = label; // Set the label for the full screen video
+        fullScreenContainer.style.display = 'block'; // Show the full screen container
     }
-    
 
-    const videoBlob = await response.blob();
-    const videoUrl = URL.createObjectURL(videoBlob);
+    function closeFullScreen() {
+        var fullScreenContainer = document.getElementById('fullScreenVideoContainer');
+        fullScreenContainer.style.display = 'none'; // Hide the full screen container
+    }
 
-    // Now you can use the videoUrl to display the video or process it further
-    console.log("Video URL:", videoUrl);
-  } catch (error) {
-    console.error("Error fetching video feed:", error.message);
-  }
-}
+    // Optional: Close full screen on ESC key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            closeFullScreen();
+        }
+    });
 
-const videoUrl = "http://localhost:8001/videostreamapi";
-fetchLiveVideo(videoUrl);
+    // Get access to Camera 1 and Camera 2
+    var liveFeed1 = document.getElementById('liveFeed1');
+    // var liveFeed2 = document.getElementById('liveFeed2');
 
-
-    </script>
+    if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                liveFeed1.srcObject = stream; // Set the stream to Camera 1 video element
+                // liveFeed2.srcObject = stream; // Set the stream to Camera 2 video element
+            })
+            .catch(function(error) {
+                console.log("Something went wrong when accessing the camera!");
+            });
+    }
+</script>
 {% endblock javascripts %}
