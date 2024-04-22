@@ -229,7 +229,7 @@
     if (navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: true })
         .then(function(stream) {
-          liveFeed2.srcObject = stream; // Assign the stream to the second video element
+          liveFeed1.srcObject = stream; // Assign the stream to the second video element
         })
         .catch(function(error) {
           console.log("Something went wrong when accessing the second camera!");
