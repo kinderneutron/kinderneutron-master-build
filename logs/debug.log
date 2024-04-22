@@ -7048,3 +7048,17 @@
 2024-04-22 07:03:35.482+0000 INFO  [o.n.g.f.DatabaseManagementServiceFactory] id: 7CEAC376A03E2B7412227BF014C3053EBC1718A303C2B27D370092D48B735E38
 2024-04-22 07:03:35.483+0000 INFO  [o.n.g.f.DatabaseManagementServiceFactory] name: system
 2024-04-22 07:03:35.483+0000 INFO  [o.n.g.f.DatabaseManagementServiceFactory] creationDate: 2024-04-20T17:29:53.595Z
+2024-04-22 08:12:29.761+0000 INFO  [o.n.g.f.DatabaseManagementServiceFactory] Shutdown started
+2024-04-22 08:12:32.687+0000 WARN  [o.n.k.i.c.VmPauseMonitorComponent] Detected VM stop-the-world pause: {pauseTime=884, gcTime=0, gcCount=0}
+2024-04-22 08:12:32.888+0000 WARN  [o.n.k.i.c.VmPauseMonitorComponent] Detected VM stop-the-world pause: {pauseTime=215, gcTime=0, gcCount=0}
+2024-04-22 08:12:33.996+0000 INFO  [o.n.b.BoltServer] Requested Bolt server shutdown
+2024-04-22 08:12:34.427+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopping remaining idle connections for connector bolt-local
+2024-04-22 08:12:34.427+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopped 0 idling connections for connector bolt-local
+2024-04-22 08:12:34.429+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopping remaining idle connections for connector bolt
+2024-04-22 08:12:34.429+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopped 0 idling connections for connector bolt
+2024-04-22 08:12:34.514+0000 INFO  [o.n.d.d.DatabaseLifecycles] Stopping 'DatabaseId{74bdd6bf[neo4j]}'.
+2024-04-22 08:12:34.686+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [neo4j/74bdd6bf] Requirement `Database unavailable` makes database neo4j unavailable.
+2024-04-22 08:12:34.686+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [neo4j/74bdd6bf] DatabaseId{74bdd6bf[neo4j]} is unavailable.
+2024-04-22 08:12:34.708+0000 INFO  [o.n.k.d.Database] [neo4j/74bdd6bf] Waiting for closing transactions.
+2024-04-22 08:12:34.709+0000 INFO  [o.n.k.d.Database] [neo4j/74bdd6bf] All transactions are closed.
+2024-04-22 08:12:34.711+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [neo4j/74bdd6bf] Checkpoint triggered by "Database shutdown" @ txId: 3 checkpoint started...
