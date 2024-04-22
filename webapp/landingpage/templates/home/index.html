@@ -29,8 +29,8 @@
     overflow-y: scroll; /* Enable vertical scrolling if needed */
   }
 
-  .green-icon {
-    color: green;
+  .yellow-icon {
+    color: yellow;
   }
 
   .red-icon {
@@ -109,7 +109,7 @@
                   dataType: 'json',
                   success: function(data) {
                       if (data.person_detected == 'yes') {
-                          $('#status-container').html('<div class="alert alert-info" >Person entered the room.<span class="icon green-icon fas fa-user"></span></div> <div class="alert alert-info">Light switched on.<span class="icon green-icon fas fa-lightbulb"></span></div>');
+                          $('#status-container').html('<div class="alert alert-info" >Person entered the room.<span class="icon yellow-icon fas fa-user"></span></div> <div class="alert alert-info">Light switched on.<span class="icon yellow-icon fas fa-lightbulb"></span></div>');
                          
                       } else {
                         $('#status-container').html('<div class="alert alert-info" >Person exited the room.<span class="icon red-icon fas fa-user"></div> <div class="alert alert-info">Light switched Off.<span class="icon red-icon fas fa-lightbulb"></span></div>');
