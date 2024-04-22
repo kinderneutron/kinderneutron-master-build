@@ -29,8 +29,8 @@
     overflow-y: scroll; /* Enable vertical scrolling if needed */
   }
 
-  .green-icon {
-    color: green;
+  .yellow-icon {
+    color: yellow;
   }
 
   .red-icon {
@@ -109,7 +109,7 @@
                   dataType: 'json',
                   success: function(data) {
                       if (data.person_detected == 'yes') {
-                          $('#status-container').html('<div class="alert alert-info" >Person entered the room.<span class="icon green-icon fas fa-user"></span></div> <div class="alert alert-info">Light switched on.<span class="icon green-icon fas fa-lightbulb"></span></div>');
+                          $('#status-container').html('<div class="alert alert-info" >Person entered the room.<span class="icon yellow-icon fas fa-user"></span></div> <div class="alert alert-info">Light switched on.<span class="icon yellow-icon fas fa-lightbulb"></span></div>');
                          
                       } else {
                         $('#status-container').html('<div class="alert alert-info" >Person exited the room.<span class="icon red-icon fas fa-user"></div> <div class="alert alert-info">Light switched Off.<span class="icon red-icon fas fa-lightbulb"></span></div>');
@@ -162,13 +162,13 @@
 
   document.addEventListener('DOMContentLoaded', function() {
           var electricityData = {
-                labels: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ],
+                labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 datasets: [{
                     label: "Electricity Consumption",
                     backgroundColor: "rgba(54, 162, 235, 0.2)",
                     borderColor: "black",
                     borderWidth: 1,
-                    data: [50, 45, 48, 55, 52, 47, 49, 50, 23, 34 ,58, 68], // Sample data for electricity consumption
+                    data: [0.3, 0.32, 0.28, 0.3, 0.35, 0.33, 0.29], // Sample data for electricity consumption
                 }],
             };
 
@@ -229,7 +229,7 @@
     if (navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: true })
         .then(function(stream) {
-          liveFeed2.srcObject = stream; // Assign the stream to the second video element
+          liveFeed1.srcObject = stream; // Assign the stream to the second video element
         })
         .catch(function(error) {
           console.log("Something went wrong when accessing the second camera!");

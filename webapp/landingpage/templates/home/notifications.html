@@ -4,8 +4,8 @@
 
 {% block stylesheets %}
 <style>
-  .green-icon {
-    color: green;
+  .yellow-icon {
+    color: yellow;
   }
 
   .red-icon {
@@ -86,13 +86,13 @@
 
       success: function(data) {
         if (data.person_detected == 'yes') {
-          $('#status-container').html('<div class="alert alert-info">Person entered the room<span class="icon green-icon fas fa-user"></span></div>');
+          $('#status-container').html('<div class="alert alert-info">Person entered the room<span class="icon yellow-icon fas fa-user"></span></div>');
         } else {
           $('#status-container').html('<div class="alert alert-info">Person exited the room<span class="icon red-icon fas fa-user"></span></div>');
         }
 
         if (data.light_status == 'on') {
-          $('#light-status').html('<div class="alert alert-info">Light is On<span class="icon green-icon fas fa-lightbulb"></span></div>');
+          $('#light-status').html('<div class="alert alert-info">Light is On<span class="icon yellow-icon fas fa-lightbulb"></span></div>');
         } else {
           $('#light-status').html('<div class="alert alert-info">Light is Off<span class="icon red-icon fas fa-lightbulb"></span></div>');
         }

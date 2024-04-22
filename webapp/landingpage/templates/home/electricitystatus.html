@@ -46,7 +46,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Month</th>
+                                        <th>Days</th>
                                         <th>Units Consumed</th>
                                     </tr>
                                 </thead>
@@ -62,76 +62,81 @@
     </div>
 {% endblock content %}
 
-{{% block javascripts %}
+{% block javascripts %}
     <!-- Include Chart.js library -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script> -->
     <script src="/static/assets/js/plugins/chartjs.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Sample data for the chart (you can replace this with your actual data)
-            var electricityData = {
-                labels: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ],
-                datasets: [{
-                    label: "Electricity Consumption",
-                    backgroundColor: "rgba(54, 162, 235, 0.2)",
-                    borderColor: "white",
-                    borderWidth: 1,
-                    data: [50, 45, 48, 55, 52, 47, 49, 50, 23, 34 ,58, 68], // Sample data for electricity consumption
-                }],
-            };
+    // Sample data for the chart, reflecting realistic daily usage
+    var electricityData = {
+        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        datasets: [{
+            label: "Electricity Consumption",
+            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            borderColor: "white",
+            borderWidth: 1,
+            data: [0.3, 0.32, 0.28, 0.3, 0.35, 0.33, 0.29], // kWh per day
+            tension: 0.4 // Adds curvature to lines
+        }],
+    };
 
-            // Get the canvas element
-            var ctx = document.getElementById('electricityConsumptionChart').getContext('2d');
+    // Get the canvas element
+    var ctx = document.getElementById('electricityConsumptionChart').getContext('2d');
 
-            // Create the chart
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data: electricityData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false, // Set to false to adjust chart size to container
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: 'white', // Set the color of the y-axis labels to white
-                            },
-                            grid: {
-                                color: 'black', // Set the color of the grid lines to a lighter shade
-                            },
-                        },
-                        x: {
-                            ticks: {
-                                color: 'white', // Set the color of the x-axis labels to white
-                            },
-                        },
+    // Create the chart
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: electricityData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Set to false to adjust chart size to container
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: 'white', // Set the color of the y-axis labels to white
+                        callback: function(value, index, values) {
+                            return value + ' kWh'; // Append 'kWh' to the y-axis labels
+                        }
+                    },
+                    grid: {
+                        color: 'black', // Set the color of the grid lines to a lighter shade
                     },
                 },
-            });
+                x: {
+                    ticks: {
+                        color: 'white', // Set the color of the x-axis labels to white
+                    },
+                },
+            },
+        },
+    });
 
-            // Function to populate the table with electricity consumption data
-            function populateElectricityTable() {
-                var tableBody = document.getElementById('electricityTableBody');
-                var months = electricityData.labels;
-                var unitsConsumed = electricityData.datasets[0].data;
+    // Function to populate the table with electricity consumption data
+    function populateElectricityTable() {
+        var tableBody = document.getElementById('electricityTableBody');
+        var daysOfWeek = electricityData.labels;
+        var unitsConsumed = electricityData.datasets[0].data;
 
-                for (var i = 0; i < months.length; i++) {
-                    var row = document.createElement('tr');
-                    var monthCell = document.createElement('td');
-                    var unitsCell = document.createElement('td');
+        for (var i = 0; i < daysOfWeek.length; i++) {
+            var row = document.createElement('tr');
+            var dayCell = document.createElement('td');
+            var unitsCell = document.createElement('td');
 
-                    monthCell.textContent = months[i];
-                    unitsCell.textContent = unitsConsumed[i];
+            dayCell.textContent = daysOfWeek[i];
+            unitsCell.textContent = unitsConsumed[i] + ' kWh'; // Append 'kWh' to the units consumed
 
-                    row.appendChild(monthCell);
-                    row.appendChild(unitsCell);
+            row.appendChild(dayCell);
+            row.appendChild(unitsCell);
 
-                    tableBody.appendChild(row);
-                }
-            }
+            tableBody.appendChild(row);
+        }
+    }
 
-            // Call the function to populate the table
-            populateElectricityTable();
-        });
+    // Call the function to populate the table
+    populateElectricityTable();
+});
+
     </script>
 {% endblock javascripts %}
