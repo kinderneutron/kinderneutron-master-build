@@ -162,3 +162,94 @@
 2024-04-17 20:26:08.348+0000 INFO  Neo4j Server shutdown initiated by request
 2024-04-17 20:26:08.349+0000 INFO  Stopping...
 2024-04-17 20:26:13.467+0000 INFO  Stopped.
+2024-04-20 17:14:37.339+0000 INFO  Logging config in use: File '/var/lib/neo4j/conf/user-logs.xml'
+2024-04-20 17:14:37.430+0000 WARN  Use of deprecated setting 'dbms.memory.heap.max_size'. It is replaced by 'server.memory.heap.max_size'.
+2024-04-20 17:14:37.430+0000 WARN  Use of deprecated setting 'dbms.memory.heap.initial_size'. It is replaced by 'server.memory.heap.initial_size'.
+2024-04-20 17:14:37.925+0000 INFO  Starting...
+2024-04-20 17:14:52.011+0000 INFO  This instance is ServerId{20aa08ad} (20aa08ad-8ff4-49b4-9d92-6510099be8b8)
+2024-04-20 17:28:57.435+0000 INFO  ======== Neo4j 5.19.0 ========
+2024-04-20 17:29:01.560+0000 INFO  Progress tracking: enabled
+2024-04-20 17:29:01.561+0000 INFO  Memory usage guard: minimum estimate
+2024-04-20 17:29:01.895+0000 INFO  GDS license file: null
+2024-04-20 17:29:01.897+0000 INFO  GDS license state: unlicensed
+2024-04-20 17:29:02.099+0000 INFO  Register GraphDataScience...
+2024-04-20 17:29:04.677+0000 INFO  GraphDataScience registered.
+2024-04-20 17:29:04.678+0000 INFO  Register GraphDataScienceExtras...
+2024-04-20 17:29:04.679+0000 INFO  GraphDataScienceExtras registered.
+2024-04-20 17:29:04.680+0000 INFO  Register MetricsFacade...
+2024-04-20 17:29:04.681+0000 INFO  MetricsFacade registered.
+2024-04-20 17:29:04.683+0000 INFO  Register legacy Task Store/ Registry...
+2024-04-20 17:29:04.684+0000 INFO  Task Store/ Registry registered.
+2024-04-20 17:29:04.685+0000 INFO  Register legacy User Log Registry...
+2024-04-20 17:29:04.686+0000 INFO  User Log Registry registered.
+2024-04-20 17:29:09.638+0000 INFO  GDS compatibility: for Neo4j Settings 5.x -- available, for Neo4j Settings 4.4 -- not available, selected: Neo4j Settings 5.x
+2024-04-20 17:29:09.638+0000 INFO  GDS compatibility: for Neo4j 4.4 -- not available, for Neo4j 5.11 -- not available, for Neo4j 5.12 -- not available, for Neo4j 5.13 -- not available, for Neo4j 5.14 -- not available, for Neo4j 5.15 -- not available, for Neo4j 5.16 -- not available, for Neo4j 5.17 -- not available, for Neo4j 5.18 -- not available, for Neo4j 5.19 -- available, selected: Neo4j 5.19
+2024-04-20 17:34:58.369+0000 INFO  Bolt enabled on 0.0.0.0:7687.
+2024-04-20 17:35:02.868+0000 INFO  HTTP enabled on 0.0.0.0:7474.
+2024-04-20 17:35:02.869+0000 INFO  Remote interface available at http://localhost:7474/
+2024-04-20 17:35:02.966+0000 INFO  id: 7CEAC376A03E2B7412227BF014C3053EBC1718A303C2B27D370092D48B735E38
+2024-04-20 17:35:02.966+0000 INFO  name: system
+2024-04-20 17:35:02.967+0000 INFO  creationDate: 2024-04-20T17:29:53.595Z
+2024-04-20 17:35:02.967+0000 INFO  Started.
+2024-04-20 20:05:17.499+0000 INFO  Neo4j Server shutdown initiated by request
+2024-04-20 20:05:17.499+0000 INFO  Stopping...
+2024-04-21 05:58:22.775+0000 INFO  Logging config in use: File '/var/lib/neo4j/conf/user-logs.xml'
+2024-04-21 05:58:22.980+0000 WARN  Use of deprecated setting 'dbms.memory.heap.max_size'. It is replaced by 'server.memory.heap.max_size'.
+2024-04-21 05:58:22.982+0000 WARN  Use of deprecated setting 'dbms.memory.heap.initial_size'. It is replaced by 'server.memory.heap.initial_size'.
+2024-04-21 05:58:23.331+0000 INFO  Starting...
+2024-04-21 05:58:29.798+0000 INFO  This instance is ServerId{20aa08ad} (20aa08ad-8ff4-49b4-9d92-6510099be8b8)
+2024-04-21 05:58:36.474+0000 INFO  ======== Neo4j 5.19.0 ========
+2024-04-21 05:58:37.877+0000 INFO  Progress tracking: enabled
+2024-04-21 05:58:37.878+0000 INFO  Memory usage guard: minimum estimate
+2024-04-21 05:58:37.972+0000 INFO  GDS license file: null
+2024-04-21 05:58:37.973+0000 INFO  GDS license state: unlicensed
+2024-04-21 05:58:38.012+0000 INFO  Register GraphDataScience...
+2024-04-21 05:58:38.061+0000 INFO  GraphDataScience registered.
+2024-04-21 05:58:38.062+0000 INFO  Register GraphDataScienceExtras...
+2024-04-21 05:58:38.062+0000 INFO  GraphDataScienceExtras registered.
+2024-04-21 05:58:38.063+0000 INFO  Register MetricsFacade...
+2024-04-21 05:58:38.064+0000 INFO  MetricsFacade registered.
+2024-04-21 05:58:38.064+0000 INFO  Register legacy Task Store/ Registry...
+2024-04-21 05:58:38.065+0000 INFO  Task Store/ Registry registered.
+2024-04-21 05:58:38.066+0000 INFO  Register legacy User Log Registry...
+2024-04-21 05:58:38.067+0000 INFO  User Log Registry registered.
+2024-04-21 05:58:38.808+0000 INFO  GDS compatibility: for Neo4j Settings 5.x -- available, for Neo4j Settings 4.4 -- not available, selected: Neo4j Settings 5.x
+2024-04-21 05:58:38.809+0000 INFO  GDS compatibility: for Neo4j 4.4 -- not available, for Neo4j 5.11 -- not available, for Neo4j 5.12 -- not available, for Neo4j 5.13 -- not available, for Neo4j 5.14 -- not available, for Neo4j 5.15 -- not available, for Neo4j 5.16 -- not available, for Neo4j 5.17 -- not available, for Neo4j 5.18 -- not available, for Neo4j 5.19 -- available, selected: Neo4j 5.19
+2024-04-21 05:59:58.172+0000 INFO  Bolt enabled on 0.0.0.0:7687.
+2024-04-21 06:00:09.943+0000 INFO  HTTP enabled on 0.0.0.0:7474.
+2024-04-21 06:00:09.945+0000 INFO  Remote interface available at http://localhost:7474/
+2024-04-21 06:00:10.017+0000 INFO  id: 7CEAC376A03E2B7412227BF014C3053EBC1718A303C2B27D370092D48B735E38
+2024-04-21 06:00:10.019+0000 INFO  name: system
+2024-04-21 06:00:10.019+0000 INFO  creationDate: 2024-04-20T17:29:53.595Z
+2024-04-21 06:00:10.020+0000 INFO  Started.
+2024-04-21 16:55:35.554+0000 INFO  Neo4j Server shutdown initiated by request
+2024-04-21 16:55:36.366+0000 INFO  Stopping...
+2024-04-22 07:02:09.937+0000 INFO  Logging config in use: File '/var/lib/neo4j/conf/user-logs.xml'
+2024-04-22 07:02:10.079+0000 WARN  Use of deprecated setting 'dbms.memory.heap.max_size'. It is replaced by 'server.memory.heap.max_size'.
+2024-04-22 07:02:10.080+0000 WARN  Use of deprecated setting 'dbms.memory.heap.initial_size'. It is replaced by 'server.memory.heap.initial_size'.
+2024-04-22 07:02:11.345+0000 INFO  Starting...
+2024-04-22 07:02:18.495+0000 INFO  This instance is ServerId{20aa08ad} (20aa08ad-8ff4-49b4-9d92-6510099be8b8)
+2024-04-22 07:02:26.138+0000 INFO  ======== Neo4j 5.19.0 ========
+2024-04-22 07:02:27.944+0000 INFO  Progress tracking: enabled
+2024-04-22 07:02:27.946+0000 INFO  Memory usage guard: minimum estimate
+2024-04-22 07:02:28.081+0000 INFO  GDS license file: null
+2024-04-22 07:02:28.083+0000 INFO  GDS license state: unlicensed
+2024-04-22 07:02:28.164+0000 INFO  Register GraphDataScience...
+2024-04-22 07:02:28.352+0000 INFO  GraphDataScience registered.
+2024-04-22 07:02:28.353+0000 INFO  Register GraphDataScienceExtras...
+2024-04-22 07:02:28.354+0000 INFO  GraphDataScienceExtras registered.
+2024-04-22 07:02:28.355+0000 INFO  Register MetricsFacade...
+2024-04-22 07:02:28.357+0000 INFO  MetricsFacade registered.
+2024-04-22 07:02:28.359+0000 INFO  Register legacy Task Store/ Registry...
+2024-04-22 07:02:28.361+0000 INFO  Task Store/ Registry registered.
+2024-04-22 07:02:28.362+0000 INFO  Register legacy User Log Registry...
+2024-04-22 07:02:28.363+0000 INFO  User Log Registry registered.
+2024-04-22 07:02:29.709+0000 INFO  GDS compatibility: for Neo4j Settings 5.x -- available, for Neo4j Settings 4.4 -- not available, selected: Neo4j Settings 5.x
+2024-04-22 07:02:29.710+0000 INFO  GDS compatibility: for Neo4j 4.4 -- not available, for Neo4j 5.11 -- not available, for Neo4j 5.12 -- not available, for Neo4j 5.13 -- not available, for Neo4j 5.14 -- not available, for Neo4j 5.15 -- not available, for Neo4j 5.16 -- not available, for Neo4j 5.17 -- not available, for Neo4j 5.18 -- not available, for Neo4j 5.19 -- available, selected: Neo4j 5.19
+2024-04-22 07:03:28.472+0000 INFO  Bolt enabled on 0.0.0.0:7687.
+2024-04-22 07:03:35.397+0000 INFO  HTTP enabled on 0.0.0.0:7474.
+2024-04-22 07:03:35.399+0000 INFO  Remote interface available at http://localhost:7474/
+2024-04-22 07:03:35.482+0000 INFO  id: 7CEAC376A03E2B7412227BF014C3053EBC1718A303C2B27D370092D48B735E38
+2024-04-22 07:03:35.482+0000 INFO  name: system
+2024-04-22 07:03:35.483+0000 INFO  creationDate: 2024-04-20T17:29:53.595Z
+2024-04-22 07:03:35.483+0000 INFO  Started.
