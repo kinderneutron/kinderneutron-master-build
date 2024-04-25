@@ -7,3 +7,5 @@
 *.cql linguist-detectable
 *.ps1 linguist-detectable=false
 *.sh linguist-detectable=false
+*.SQL linguist-detectable=false
+
