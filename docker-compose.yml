@@ -6,7 +6,7 @@
      image: kinderneutron_api_image
      devices:
       - /dev/video0:/dev/video0
-      # - /dev/ttyACM0:/dev/ttyACM0
+      - /dev/ttyACM0:/dev/ttyACM0
      environment:
       - DISPLAY=:0
      container_name: kinderneutronapicontainer
@@ -27,7 +27,7 @@
      image: kinderneutronimage
      devices:
       - /dev/video0:/dev/video0
-      # - /dev/ttyACM0:/dev/ttyACM0
+      - /dev/ttyACM0:/dev/ttyACM0
      container_name: kinderneutroncontainer
      stdin_open: true #  docker attach container_id
      tty: true
@@ -90,7 +90,7 @@
       - '5446:5432'
     volumes:
       - db:/var/lib/postgresql/data
-      - ./Patches/SQL/create-db.sql:/docker-entrypoint-initdb.d/create-db.sql
+      - ./setup/SQL/create-db.sql:/docker-entrypoint-initdb.d/create-db.sql
     networks:
       - kinderneutron_network
   volumes:
