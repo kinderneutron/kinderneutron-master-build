@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'error_log_api',
     'detectionapi',
     'video_stream',
+    'video_stream_2',
     'device_detection_api'
 ]
 
