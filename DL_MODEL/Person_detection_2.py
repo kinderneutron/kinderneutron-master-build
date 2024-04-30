@@ -42,7 +42,7 @@ detected_far = False
 async def process_frame(frame):
     global detected_far, detected_near
     height, width, _ = frame.shape
-    blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (416, 416), swapRB=True, crop=False)
+    blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (218, 218), swapRB=True, crop=False)
     net.setInput(blob)
     detections = net.forward(layer_names)
     num_people_near = 0
@@ -52,7 +52,7 @@ async def process_frame(frame):
             scores = obj[5:]
             class_id = np.argmax(scores)
             confidence = scores[class_id]
-            if confidence > 0.3 and class_id == 0:
+            if confidence > 0.5 and class_id == 0:
                  # Class ID 0 represents a person in COCO dataset
                 center_x = int(obj[0] * width)
                 center_y = int(obj[1] * height)
@@ -61,19 +61,16 @@ async def process_frame(frame):
 
                 box_size = max(w, h)
                 if 410 < box_size <= NEAR_DISTANCE_THRESHOLD:
-                    detected_near = True
-                else:
-                    detected_near = False
+                    num_people_near += 1
                 if 410 >= box_size >= FAR_DISTANCE_THRESHOLD:
-                    detected_far = True
-                else:
-                    detected_far = False
+                    num_people_far += 1
 
                 x = int(center_x - w / 2)
                 y = int(center_y - h / 2)
 
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
+    detected_near = num_people_near
+    detected_far = num_people_far 
     return frame, detected_near, detected_far
 
 
@@ -107,8 +104,14 @@ async def process_video_feed_async(url):
             processed_frame, detected_near, detected_far= await process_frame(frame)
 
 
-            temp_detection_status['near']=detected_near
-            temp_detection_status['far']=detected_far
+            if detected_near > 0:
+                temp_detection_status['near']=True
+            else:
+                temp_detection_status['near']=False
+            if detected_far > 0:
+                temp_detection_status['far']=True
+            else:
+                temp_detection_status['far']=False
 
             # if detected_near:
             #     # print("Person Detected Near Camera")
@@ -134,7 +137,7 @@ async def process_video_feed_async(url):
                 person_detection_status = copy.deepcopy(temp_detection_status)
                 print('New person detection status:', person_detection_status)
                 
-                channel.basic_publish(exchange='', routing_key='person_detection', body=json.dumps(person_detection_status),
+                channel.basic_publish(exchange='', routing_key='person_detection_2', body=json.dumps(person_detection_status),
                                     properties=pika.BasicProperties(delivery_mode=2))
                 print('Published the Message')
                 

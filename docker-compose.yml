@@ -8,7 +8,7 @@
       - /dev/video0:/dev/video0
       - /dev/video1:/dev/video1
       - /dev/video2:/dev/video2
-      - /dev/ttyACM0:/dev/ttyACM0
+      # - /dev/ttyACM0:/dev/ttyACM0
      environment:
       - DISPLAY=:0
      container_name: kinderneutronapicontainer
@@ -31,7 +31,7 @@
       - /dev/video0:/dev/video0
       - /dev/video1:/dev/video1
       - /dev/video2:/dev/video2
-      - /dev/ttyACM0:/dev/ttyACM0
+      # - /dev/ttyACM0:/dev/ttyACM0
      container_name: kinderneutroncontainer
      stdin_open: true #  docker attach container_id
      tty: true
