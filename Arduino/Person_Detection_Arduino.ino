@@ -25,6 +25,7 @@ void loop() {
 
     if (message.equals("L")) {
       // All lights are already off
+      Serial.println("Done");
       return; // Exit the loop iteration
     } 
 
@@ -48,6 +49,7 @@ void loop() {
         }
       }
     }
+    Serial.println("Done");
   }
 }
 
