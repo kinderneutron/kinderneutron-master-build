@@ -55,19 +55,19 @@
           <form id="userForm">
             <div class="input-wrap">
               <label>Username</label>
-              <input type="text" id="displayUsername" class="form-control" placeholder="Username" readonly>
+              <input type="text" id="displayUsername" name = 'displayUsername' class="form-control" placeholder="Username" readonly>
             </div>
             <div class="input-wrap">
               <label for="exampleInputEmail1">Email address</label>
-              <input type="email" id="displayEmail" class="form-control" placeholder="Email" readonly>
+              <input type="email" id="displayEmail" class="form-control" value="{{ email }}" placeholder="Email" readonly>
             </div>
             <div class="input-wrap">
               <label>Type of Subscription</label>
-              <input type="text" id="displaySubscription" class="form-control" readonly>
+              <input type="text" id="displaySubscription" value="{{ plan_type }}" class="form-control" readonly>
             </div>
             <div class="input-wrap">
               <label>Auth Token</label>
-              <input type="text" id="displayAuthToken" class="form-control" placeholder="Auth Token" readonly>
+              <input type="text" id="displayAuthToken" class="form-control" value="{{ auth_token }}" placeholder="Auth Token" readonly>
             </div>
           </form>
         </div>
@@ -116,7 +116,7 @@
       })
       .then(result => {
         // Process the query result
-        const userData = result.rows[0]; // Assuming only one row is returned
+         // Assuming only one row is returned
         
         // Populate the form fields with user data
         document.getElementById('displayUsername').value = userData.username;

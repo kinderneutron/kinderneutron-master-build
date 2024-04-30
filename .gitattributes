@@ -1,5 +1,11 @@
 *.js linguist-detectable=false
 *.css linguist-detectable=false
 *.html linguist-detectable=false
-*.json linguist-detectable
-*.yml linguist-detectable
+*.json linguist-detectable=false
+*.yml linguist-detectable=false
+*.cypher linguist-detectable
+*.cql linguist-detectable
+*.ps1 linguist-detectable=false
+*.sh linguist-detectable=false
+*.bat linguist-detectable=false
+

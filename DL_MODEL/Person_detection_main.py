@@ -29,9 +29,6 @@ global temp_detection_status
 # Initialize dictionary for person detection status
 NEAR_DISTANCE_THRESHOLD = 1100  # Example threshold for near detection (pixels)
 FAR_DISTANCE_THRESHOLD = 100    # Example threshold for far detection (pixels)
-HYS_NEAR_THRESHOLD = 3         # Hysteresis threshold for near detection
-HYS_FAR_THRESHOLD = 3          # Hysteresis threshold for far detection
-
 # Initialize detection status and memory
 person_detection_status = {'near': False, 'far': False}
 temp_detection_status = {'near': False, 'far': False}
@@ -39,6 +36,8 @@ temp_detection_status = {'near': False, 'far': False}
 global detected_far,detected_near
 detected_near = False
 detected_far = False
+print('This is Production System, KN2.0 has Started ')
+status_lock = asyncio.Lock()
 async def process_frame(frame):
     global detected_far, detected_near
     height, width, _ = frame.shape
@@ -52,9 +51,7 @@ async def process_frame(frame):
             scores = obj[5:]
             class_id = np.argmax(scores)
             confidence = scores[class_id]
-            if confidence > 0.5 and class_id == 0:
-                num_people_near = 0
-                num_people_far = 0  # Class ID 0 represents a person in COCO dataset
+            if confidence > 0.5 and class_id == 0:# Class ID 0 represents a person in COCO dataset
                 center_x = int(obj[0] * width)
                 center_y = int(obj[1] * height)
                 w = int(obj[2] * width)
@@ -63,18 +60,16 @@ async def process_frame(frame):
                 box_size = max(w, h)
                 if 440 < box_size <= NEAR_DISTANCE_THRESHOLD:
                     num_people_near += 1
-                elif 420 >= box_size >= FAR_DISTANCE_THRESHOLD:
+                if 440 >= box_size >= FAR_DISTANCE_THRESHOLD:
                     num_people_far += 1
-                else:
-                    pass
 
                 x = int(center_x - w / 2)
                 y = int(center_y - h / 2)
 
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-    detected_near = num_people_near > 0
-    detected_far = num_people_far > 0
+    detected_near = num_people_near
+    detected_far = num_people_far 
 
     return frame, detected_near, detected_far
 
@@ -98,7 +93,7 @@ async def process_video_feed_async(url):
         return
 
     bytes_data = bytes()
-    for chunk in response.iter_content(chunk_size=10):
+    for chunk in response.iter_content(chunk_size=50):
         bytes_data += chunk
         a = bytes_data.find(b'\xff\xd8')  # Start of frame
         b = bytes_data.find(b'\xff\xd9')  # End of frame
@@ -129,27 +124,26 @@ async def process_video_feed_async(url):
             #     temp_detection_status['far'] = False
             
             #print(temp_detection_status,'temp_status')
-          
-            if temp_detection_status.get('near') != person_detection_status.get('near') or temp_detection_status.get('far') != person_detection_status.get('far'):
-                if flag == False:
-                    print('Detection status changed. Publishing message.')
-                    print(' ')
-                    print('----------------------------------------------')
-                    print(' ')
+            async with status_lock: 
+                if temp_detection_status.get('near') != person_detection_status.get('near') or temp_detection_status.get('far') != person_detection_status.get('far'):
+ 
+                    # print('Detection status changed. Publishing message.')
+                    # print(' ')
+                    # print('----------------------------------------------')
+                    # print(' ')
                     person_detection_status = copy.deepcopy(temp_detection_status)
-                    print('New person detection status:', person_detection_status)
-                    time.sleep(0.00001)
+                    # print('New person detection status:', person_detection_status)
+                    time.sleep(0.0001)
                     channel.basic_publish(exchange='', routing_key='person_detection', body=json.dumps(person_detection_status),
                                         properties=pika.BasicProperties(delivery_mode=2))
-                    print('ublished the Message')
-                    time.sleep(0.00001)
+                    # print('ublished the Message')
+                    time.sleep(0.0001)
                     flag = True
-            else:
-                if flag == True:
-                    print(person_detection_status,'person_detection_status')
-                    print('Detection status unchanged. Not publishing message.')
+                else:
                     flag = False
-            time.sleep(0.00001)
+                    # print(person_detection_status,'person_detection_status')
+                    # print('Detection status unchanged. Not publishing message.')
+            time.sleep(0.001)
 async def main():
     tasks = [process_video_feed_async(video_feed_url) for _ in range(4)]
     await asyncio.gather(*tasks)

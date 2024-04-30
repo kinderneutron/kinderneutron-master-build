@@ -12,7 +12,7 @@ driver = GraphDatabase.driver(uri, auth=(username, password))
 
 # RabbitMQ connection parameters
 rabbitmq_host = 'localhost'
-queue_name = 'person_detection'
+
 
 # Arduino serial connection
 arduino_port = '/dev/ttyACM0'
@@ -80,9 +80,15 @@ def consume_messages():
     connection_params = pika.ConnectionParameters(host=RABBITMQ_HOST, port=RABBITMQ_PORT, credentials=credentials)
     connection = pika.BlockingConnection(connection_params)
     channel = connection.channel()
-    channel.queue_declare(queue=queue_name)
-    channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
-    print(f"Waiting for messages from {queue_name}. To exit press CTRL+C")
+    channel.queue_declare(queue='person_detection')
+    channel.basic_consume(queue='person_detection', on_message_callback=callback, auto_ack=True)
+    print(f"Waiting for messages from {'person_detection'}. To exit press CTRL+C")
+    channel.start_consuming()
+
+    channel = connection.channel()
+    channel.queue_declare(queue='person_detection_2')
+    channel.basic_consume(queue='person_detection_2', on_message_callback=callback, auto_ack=True)
+    print(f"Waiting for messages from {'person_detection_2'}. To exit press CTRL+C")
     channel.start_consuming()
 
 if __name__ == '__main__':

@@ -91,7 +91,7 @@
           $('#status-container').html('<div class="alert alert-info">Person exited the room<span class="icon red-icon fas fa-user"></span></div>');
         }
 
-        if (data.light_status == 'on') {
+        if (data.person_detected == 'yes') {
           $('#light-status').html('<div class="alert alert-info">Light is On<span class="icon yellow-icon fas fa-lightbulb"></span></div>');
         } else {
           $('#light-status').html('<div class="alert alert-info">Light is Off<span class="icon red-icon fas fa-lightbulb"></span></div>');
