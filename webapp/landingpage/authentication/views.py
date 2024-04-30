@@ -42,6 +42,8 @@ def login_view(request):
                     data = ("DBERROR-0"+str(error_id),"N/A","Database Error","Error Due to Invalid Post Request")
                     cursor.execute(query1, data)
                     error_id = error_id+1
+            f = open('data.txt','w')
+            f.write(name)
             return redirect('http://127.0.0.1:8000/landingpage/')
 
 

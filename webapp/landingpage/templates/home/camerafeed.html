@@ -71,13 +71,13 @@
     <div class="row">
         <div class="col-md-6">
             <div class="video-container" onclick="openFullScreen('http://localhost:8001/videostreamapi/', 'Camera 1', 'liveFeed1')">
-                <video id="liveFeed1" class="video-element" autoplay playsinline muted></video>
+                <img id="liveFeed1" class="img-element" autoplay playsinline muted src="http://localhost:8001/videostreamapi"></img>
                 <span class="camera-label">Camera 1</span>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="video-container" onclick="openFullScreen('http://localhost:8002/videostreamapi/', 'Camera 2', 'liveFeed2')">
-                <video id="liveFeed2" class="video-element" autoplay playsinline muted></video>
+            <div class="video-container" onclick="openFullScreen('http://localhost:8001/videostreamapi2/', 'Camera 2', 'liveFeed2')">
+                <img id="liveFeed2" class="video-element" autoplay playsinline muted src="http://localhost:8001/videostreamapi2"></img>
                 <span class="camera-label">Camera 2</span>
             </div>
         </div>

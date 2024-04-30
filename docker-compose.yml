@@ -6,6 +6,8 @@
      image: kinderneutron_api_image
      devices:
       - /dev/video0:/dev/video0
+      - /dev/video1:/dev/video1
+      - /dev/video2:/dev/video2
       - /dev/ttyACM0:/dev/ttyACM0
      environment:
       - DISPLAY=:0
@@ -27,6 +29,8 @@
      image: kinderneutronimage
      devices:
       - /dev/video0:/dev/video0
+      - /dev/video1:/dev/video1
+      - /dev/video2:/dev/video2
       - /dev/ttyACM0:/dev/ttyACM0
      container_name: kinderneutroncontainer
      stdin_open: true #  docker attach container_id
@@ -41,11 +45,13 @@
       
    redis:
     image: redis:latest
-    container_name: redis_server
+    container_name: redis-server
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - kinderneutron_network
 
    rabbitmq:
     image: rabbitmq:management

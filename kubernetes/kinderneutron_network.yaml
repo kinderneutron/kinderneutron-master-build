@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kinderneutron-network
+spec:
+  selector: {} # All pods in the network can access each other
+  type: ClusterIP 

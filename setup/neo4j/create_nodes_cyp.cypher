@@ -2,8 +2,8 @@
 CREATE (camera1:Camera {name: "camera1"})
 
 // Create Distance nodes
-CREATE (near:Distance {name: "near"})
-CREATE (far:Distance {name: "far"})
+CREATE (near:near {name: "near"})
+CREATE (far:far {name: "far"})
 
 // Create Bulb nodes with pin properties
 CREATE (bulb1:Bulb {name: "bulb1", pin: 3})
