@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-service
+spec:
+  replicas: 1  # Number of replicas (can be scaled)
+  selector:
+    matchLabels:
+      app: web-service  # Label selector for pods
+  template:
+    metadata:
+      labels:
+        app: web-service  # Matches the selector
+    spec:
+      containerName: kinderneutronapicontainer  # Container name
+      containers:
+      - name: web-service
+        image: kinderneutron_api_image  # Replace with your image name
+        ports:
+        - containerPort: 8001
+          name: http  # Service port name
+        # Adjust resources (memory, CPU) based on your application's needs
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "1"
+          limits:
+            memory: "2Gi"
+            cpu: "2"
+        # Remove devices section (not recommended)
+        # environment:  # Not recommended to hardcode environment variables in deployments
+        #   - DISPLAY=:0
+        stdinOpen: true  # Allows attaching to container
+        tty: true
+        volumeMounts:
+        - name: kinderneutron-volume  # Mount the PVC (replace with your PVC name)
+          mountPath: /root/kinderneutron
+        - name: requirements-volume  # Mount the requirements file (replace with your PVC name)
+          mountPath: /kinderneutron/requirements.txt
+      networks:
+      - kinderneutron-network  # Connect to the service network
+
+# Create a Persistent Volume Claim (PVC) for your application data (replace with your configuration)
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: kinderneutron-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
+#   storageClassName: my-storage-class  # Replace with your storage class

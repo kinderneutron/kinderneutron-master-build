@@ -51,7 +51,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
-
 ROOT_URLCONF = 'webapp.urls'
 
 TEMPLATES = [
@@ -87,6 +86,8 @@ DATABASES = {
           'PORT': 5432,
       }
   }
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

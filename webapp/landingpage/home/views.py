@@ -71,9 +71,19 @@ def pages(request):
     detection_data= detection_json_data.json()
     error_log_data = error_log_json_data.json()
     device_log_data = device_log_data.json()
-    
+    f = open('data.txt','r')
+    username = f.read()
+    conn = psycopg2.connect(dbname="kinderneutron_db", user="postgres",  password="123456",  host="psql-db", port="5432")
+    cursor = conn.cursor()
+    cursor.execute("SELECT email,auth_token FROM public.user WHERE username = '"+username+"'")
+    records = cursor.fetchone()
+    email = records[0]
+    auth_token = records[1]
+    cursor.execute("SELECT * FROM authtoken WHERE auth_token = '"+auth_token+"'")
+    records = cursor.fetchone()
+    plan_type = records[1]
+    print(plan_type)
     try:
-
         load_template = request.path.split('/')[-1]
         if load_template == 'admin':
             return HttpResponseRedirect(reverse('admin:index'))
@@ -82,11 +92,12 @@ def pages(request):
         context['error_logs'] = error_log_data
         context['devices'] = device_log_data
         context['json_data'] = last_message
-        print(context['json_data'])
-       
-
+        context['email'] = email
+        context['auth_token'] = auth_token
+        context['plan_type'] = plan_type
+        context
+        #print(context['json_data'])
         html_template = loader.get_template('home/' + load_template)
-        
         return HttpResponse(html_template.render(context, request))
 
     except template.TemplateDoesNotExist:
