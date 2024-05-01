@@ -39,6 +39,9 @@ temp_detection_status = {'near': False, 'far': False}
 global detected_far,detected_near
 detected_near = False
 detected_far = False
+print('This is Production System')
+print('KN 2.0 For Camera2 Has Started')
+                    
 async def process_frame(frame):
     global detected_far, detected_near
     height, width, _ = frame.shape
@@ -130,22 +133,22 @@ async def process_video_feed_async(url):
           
             if temp_detection_status.get('near') != person_detection_status.get('near') or temp_detection_status.get('far') != person_detection_status.get('far'):
 
-                print('Detection status changed. Publishing message.')
-                print(' ')
-                print('----------------------------------------------')
-                print(' ')
+                # print('Detection status changed. Publishing message.')
+                # print(' ')
+                # print('----------------------------------------------')
+                # print(' ')
                 person_detection_status = copy.deepcopy(temp_detection_status)
-                print('New person detection status:', person_detection_status)
+                # print('New person detection status:', person_detection_status)
                 
                 channel.basic_publish(exchange='', routing_key='person_detection_2', body=json.dumps(person_detection_status),
                                     properties=pika.BasicProperties(delivery_mode=2))
-                print('Published the Message')
+                # print('Published the Message')
                 
         
             else:
-                
-                print(person_detection_status,'person_detection_status')
-                print('Detection status unchanged. Not publishing message.')
+                flag = False
+                # print(person_detection_status,'person_detection_status')
+                # print('Detection status unchanged. Not publishing message.')
                     
             
 async def main():

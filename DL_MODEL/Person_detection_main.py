@@ -58,9 +58,9 @@ async def process_frame(frame):
                 h = int(obj[3] * height)
 
                 box_size = max(w, h)
-                if 440 < box_size <= NEAR_DISTANCE_THRESHOLD:
+                if 400 < box_size <= NEAR_DISTANCE_THRESHOLD:
                     num_people_near += 1
-                if 440 >= box_size >= FAR_DISTANCE_THRESHOLD:
+                if 400 >= box_size >= FAR_DISTANCE_THRESHOLD:
                     num_people_far += 1
 
                 x = int(center_x - w / 2)
@@ -93,7 +93,7 @@ async def process_video_feed_async(url):
         return
 
     bytes_data = bytes()
-    for chunk in response.iter_content(chunk_size=50):
+    for chunk in response.iter_content(chunk_size=150):
         bytes_data += chunk
         a = bytes_data.find(b'\xff\xd8')  # Start of frame
         b = bytes_data.find(b'\xff\xd9')  # End of frame

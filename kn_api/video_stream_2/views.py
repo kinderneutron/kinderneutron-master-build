@@ -4,7 +4,7 @@ from django.views.decorators import gzip
 import threading
 import time
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(3)
 
 # Function to read frames from camera and stream as HTTP response
 def video_stream_2():

@@ -22,7 +22,7 @@ RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', '5672')
 RABBITMQ_USERNAME = os.getenv('RABBITMQ_DEFAULT_USER', 'admin')
 RABBITMQ_PASSWORD = os.getenv('RABBITMQ_DEFAULT_PASS', 'admin')
 try:
-    ser = serial.Serial(arduino_port, arduino_baudrate)
+    ser = serial.Serial(arduino_port, arduino_baudrate,timeout=0.5)
 except Exception as e:
     print('Warning: Arduino is Not Attached to Your Device')
 
@@ -138,22 +138,22 @@ def callback(ch, method, properties, body):
         print(f"Sending active pins {pin_list} to Arduino")
         try:
             ser.write(bytes(str(pin_list), 'utf-8'))
-            while True:
-                if ser.in_waiting > 0:
-                    response = ser.readline().decode().strip()
-                    if response == "Done":
-                        break
+            # while True:
+            #     if ser.in_waiting > 0:
+            #         response = ser.readline().decode().strip()
+            #         if response == "Done":
+            #             break
         except Exception as e:
             print('Warning: Arduino is Not Attached to Your Device')
     else:
         print("Area not found or pin not assigned.")
         try:
             ser.write(bytes("L", 'utf-8'))
-            while True:
-                if ser.in_waiting > 0:
-                    response = ser.readline().decode().strip()
-                    if response == "Done":
-                        break
+            # while True:
+            #     if ser.in_waiting > 0:
+            #         response = ser.readline().decode().strip()
+            #         if response == "Done":
+            #             break
         except Exception as e:
             print('Warning: Arduino is Not Attached to Your Device')
 
