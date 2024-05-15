@@ -36,7 +36,7 @@ class Database_Update:
                 
             # Execute the query
                 cursor.execute(query, data_val)
-                print(data)
+                # print(data)
             # Commit the transaction
                 try:
                     conn.commit()
@@ -59,7 +59,7 @@ class Database_Update:
                 
             # Execute the query
                 cursor.execute(query, data_val)
-                print(data)
+                # print(data)
             # Commit the transaction
                 try:
                     conn.commit()

@@ -42,7 +42,7 @@ def consume_rabbitmq_message():
         connection = pika.BlockingConnection(connection_params)
         channel = connection.channel()
         
-        queue_name = 'person_detection'
+        queue_name = 'webappdet'
         channel.queue_declare(queue=queue_name)
 
         method_frame, header_frame, body = channel.basic_get(queue=queue_name, auto_ack=True)

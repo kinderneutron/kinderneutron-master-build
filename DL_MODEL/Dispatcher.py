@@ -2,8 +2,9 @@ import pika
 from neo4j import GraphDatabase
 import serial
 import json
+import threading
 import os
-
+timer = None
 # Neo4j credentials and connection
 uri = "neo4j://neo4j-container:7687"
 username = "neo4j"
@@ -22,7 +23,7 @@ RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', '5672')
 RABBITMQ_USERNAME = os.getenv('RABBITMQ_DEFAULT_USER', 'admin')
 RABBITMQ_PASSWORD = os.getenv('RABBITMQ_DEFAULT_PASS', 'admin')
 try:
-    ser = serial.Serial(arduino_port, arduino_baudrate,timeout=0.5)
+    ser = serial.Serial(arduino_port, arduino_baudrate,timeout=0.2)
 except Exception as e:
     print('Warning: Arduino is Not Attached to Your Device')
 
@@ -114,6 +115,7 @@ def update_active_pins(pin_values, add=True):
     return list(active_pins)
 
 def callback(ch, method, properties, body):
+    global message,pin_list,timer
     message = json.loads(body.decode('utf-8'))
     print(f"Received message: {message}")
     pin_list = []
@@ -129,6 +131,14 @@ def callback(ch, method, properties, body):
     # Get the pin values based on the queue name and message content
     #pin_values = queue_pin_mapping.get(queue_name, {}).get(message.get('status', 'near'), [])
     pin_list = pin_values + pin_values_2
+    if timer is not None:
+        timer.cancel()
+        # Set the timer to wait for 2 seconds before sending data
+    timer = threading.Timer(1.0, update_arduino)
+    timer.start()
+    
+def update_arduino():
+    global message,pin_list
     if pin_list != []:
         # Update the active pins based on the current message
         active_pins_updated = update_active_pins(pin_values, message.get('active', True))
@@ -138,25 +148,24 @@ def callback(ch, method, properties, body):
         print(f"Sending active pins {pin_list} to Arduino")
         try:
             ser.write(bytes(str(pin_list), 'utf-8'))
-            # while True:
-            #     if ser.in_waiting > 0:
-            #         response = ser.readline().decode().strip()
-            #         if response == "Done":
-            #             break
+            while True:
+                if ser.in_waiting > 0:
+                    response = ser.readline().decode().strip()
+                    if response == "Done":
+                        break
         except Exception as e:
             print('Warning: Arduino is Not Attached to Your Device')
     else:
         print("Area not found or pin not assigned.")
         try:
             ser.write(bytes("L", 'utf-8'))
-            # while True:
-            #     if ser.in_waiting > 0:
-            #         response = ser.readline().decode().strip()
-            #         if response == "Done":
-            #             break
+            while True:
+                if ser.in_waiting > 0:
+                    response = ser.readline().decode().strip()
+                    if response == "Done":
+                        break
         except Exception as e:
             print('Warning: Arduino is Not Attached to Your Device')
-
 def consume_messages():
     print(RABBITMQ_HOST)
     credentials = pika.PlainCredentials(RABBITMQ_USERNAME, RABBITMQ_PASSWORD)

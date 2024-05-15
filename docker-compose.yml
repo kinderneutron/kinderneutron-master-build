@@ -10,7 +10,7 @@
       - /dev/video3:/dev/video3
       - /dev/video2:/dev/video2
       - /dev/video4:/dev/video4
-      # - /dev/video5:/dev/video5
+      - /dev/video5:/dev/video5
       - /dev/ttyACM0:/dev/ttyACM0
      environment:
       - DISPLAY=:0
@@ -36,7 +36,7 @@
       - /dev/video2:/dev/video2
       - /dev/video3:/dev/video3
       - /dev/video4:/dev/video4
-      # - /dev/video5:/dev/video5
+      - /dev/video5:/dev/video5
       - /dev/ttyACM0:/dev/ttyACM0
      container_name: kinderneutroncontainer
      stdin_open: true #  docker attach container_id

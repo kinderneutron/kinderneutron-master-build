@@ -13,6 +13,7 @@ RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
 RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', '5672')
 RABBITMQ_USERNAME = os.getenv('RABBITMQ_DEFAULT_USER', 'admin')
 RABBITMQ_PASSWORD = os.getenv('RABBITMQ_DEFAULT_PASS', 'admin')
+kn = kinderneutron()
 
 # Define global variables
 NEAR_DISTANCE_THRESHOLD = 900  # Example threshold for near detection (pixels)
@@ -85,6 +86,7 @@ async def process_video_feed_async(url):
     connection = pika.BlockingConnection(connection_params)
     channel = connection.channel()
     channel.queue_declare(queue='person_detection', durable=False) 
+    channel.queue_declare(queue='webappdet', durable=False)
 
 
     response = requests.get(url, stream=True)
@@ -136,8 +138,13 @@ async def process_video_feed_async(url):
                     time.sleep(0.0001)
                     channel.basic_publish(exchange='', routing_key='person_detection', body=json.dumps(person_detection_status),
                                         properties=pika.BasicProperties(delivery_mode=2))
+                    channel.basic_publish(exchange='', routing_key='webappdet', body=json.dumps(person_detection_status),
+                                        properties=pika.BasicProperties(delivery_mode=2))
+                    kn.dbupdate()
+                    kn.dbupdate()
                     # print('ublished the Message')
                     time.sleep(0.0001)
+                   
                     flag = True
                 else:
                     flag = False
